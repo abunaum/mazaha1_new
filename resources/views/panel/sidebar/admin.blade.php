@@ -58,13 +58,13 @@
     </a>
     <ul id="program-nav" class="nav-content collapse @if(isset($tab)) @if($tab === 'Program') show @endif @endif" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="{{ route('agenda')}}" @if($pages === 'Jenis Program') class="active" @endif>
-                <i class="bi bi-circle"></i><span>Jenis Agenda</span>
+            <a href="{{ route('jp')}}" @if($pages === 'Jenis Program') class="active" @endif>
+                <i class="bi bi-circle"></i><span>Jenis Program</span>
             </a>
         </li>
         <li>
-            <a href="{{ route('agenda')}}" @if($pages === 'Semua Program') class="active" @endif>
-                <i class="bi bi-circle"></i><span>Semua Agenda</span>
+            <a href="{{ route('program')}}" @if($pages === 'Semua Program') class="active" @endif>
+                <i class="bi bi-circle"></i><span>Semua Program</span>
             </a>
         </li>
     </ul>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\gs;
 use App\Models\Post;
+use App\Models\program;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -165,5 +166,19 @@ class HomeController extends Controller
             'pages' => 'sarpras',
         ];
         return view('sarpras', $data);
+    }
+
+    public function program($id = 0)
+    {
+        $program = program::where('id', $id)->first();
+        if ($program) {
+            $data = [
+                'pages' => 'program',
+                'program' => $program,
+            ];
+            return view('program', $data);
+        } else {
+            return abort(404);
+        }
     }
 }

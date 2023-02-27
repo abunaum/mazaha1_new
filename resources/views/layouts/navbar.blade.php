@@ -58,32 +58,23 @@
             <a href="#">
                 <span>Program</span> <i class="bi bi-chevron-down"></i>
             </a>
+            @php
+                $getprg = \App\Models\program::join('jenis_program', 'jenis_program.id', '=', 'programs.jenis_program_id')
+                    ->select('programs.*','jenis_program.nama as jenis_program')
+                    ->get()
+                    ->groupBy('jenis_program');
+            @endphp
             <ul>
-                <li class="dropdown"><a href="#"><span>Intrakulikuler</span> <i class="bi bi-chevron-right"></i></a>
-                    <ul>
-                        <li><a href="#">MIPA</a></li>
-                        <li><a href="#">ISS</a></li>
-                        <li><a href="#">PK</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a href="#"><span>Ekstrakulikuler</span> <i class="bi bi-chevron-right"></i></a>
-                    <ul>
-                        <li><a href="#">Pramuka</a></li>
-                        <li><a href="#">KIR</a></li>
-                        <li><a href="#">Tartilul Qur'an</a></li>
-                        <li><a href="#">English Club</a></li>
-                        <li><a href="#">Arabic Club</a></li>
-                        <li><a href="#">kelas Olimpiade</a></li>
-                        <li><a href="#">Pagar Nusa</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a href="#"><span>Program Unggulan</span> <i class="bi bi-chevron-right"></i></a>
-                    <ul>
-                        <li><a href="#">Tahfizdul Qur'an</a></li>
-                        <li><a href="#">Tahqiqu Qiroatil Kutub</a></li>
-                        <li><a href="#">Prodistik</a></li>
-                    </ul>
-                </li>
+                @foreach($getprg as $key => $value)
+                    <li class="dropdown"><a href="#"><span>{{ $key }}</span> <i
+                                class="bi bi-chevron-right"></i></a>
+                        <ul>
+                            @foreach($value as $key2 => $prog)
+                                <li><a href="{{ url("/program/$prog->id") }}">{{ $prog->nama }}</a></li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endforeach
             </ul>
         </li>
         <li class="dropdown">
@@ -93,7 +84,9 @@
             <ul>
                 <li><a class="nav-link scrollto" href="{{ url('/berita') }}">Berita</a></li>
                 <li><a class="nav-link scrollto" href="{{ route('agenda-list') }}">Agenda</a></li>
-                <li><a class="nav-link scrollto" href="https://drive.google.com/drive/folders/1MM8y1__qJr4pGJxhXFDqRwdLafBIAM1S" target="_blank">Galeri</a></li>
+                <li><a class="nav-link scrollto"
+                       href="https://drive.google.com/drive/folders/1MM8y1__qJr4pGJxhXFDqRwdLafBIAM1S" target="_blank">Galeri</a>
+                </li>
             </ul>
         </li>
         <li class="dropdown">

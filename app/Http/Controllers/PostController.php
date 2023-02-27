@@ -82,7 +82,7 @@ class PostController extends Controller
             try {
                 $post['gambar'] = $request->file('gambar')->store('gambar-post');
             } catch (\Throwable $th) {
-                return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Upload ke Gdrive');
+                return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Upload gambar');
             }
         } else {
             $post['gambar'] = 'default-post.jpg';

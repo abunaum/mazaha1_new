@@ -3,9 +3,11 @@
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\JenisProgramController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostTableController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
@@ -36,6 +38,7 @@ Route::get('/sejarah-madrasah', [HomeController::class, 'sejarah'])->name('sejar
 Route::get('/sarana-prasarana', [HomeController::class, 'sarpras'])->name('sarpras');
 Route::get('/agenda', [AgendaController::class, 'list'])->name('agenda-list');
 Route::get('/agenda/detail/{id}', [AgendaController::class, 'show'])->name('agenda-detail');
+Route::get('/program/{id}', [HomeController::class, 'program'])->name('program');
 //Route::get('/ppdb', [HomeController::class, 'ppdb']);
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 Route::prefix('/berita')->group(function () {
@@ -77,6 +80,24 @@ Route::middleware('auth')->group(function () {
                         'edit' => 'agenda-edit',
                         'update' => 'agenda-edit-progress',
                         'destroy' => 'agenda-hapus',
+                    ]
+                ])->except('show');
+                Route::resource('/jenis-program', JenisProgramController::class, [
+                    'names' => [
+                        'index' => 'jp',
+                        'store' => 'jp-tambah',
+                        'update' => 'jp-edit',
+                        'destroy' => 'jp-hapus',
+                    ]
+                ])->except('show', 'create', 'edit');
+                Route::resource('/program', ProgramController::class, [
+                    'names' => [
+                        'index' => 'program',
+                        'create' => 'program-tambah',
+                        'store' => 'program-tambah-progress',
+                        'edit' => 'program-edit',
+                        'update' => 'program-edit-progress',
+                        'destroy' => 'program-hapus',
                     ]
                 ])->except('show');
 //                Route::get('/siswa', [AdminController::class, 'siswa']);
