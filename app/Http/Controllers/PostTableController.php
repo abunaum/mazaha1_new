@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
@@ -38,7 +39,7 @@ class PostTableController extends Controller
 
     }
 
-    public function restore(Request $request)
+    public function restore(Request $request): RedirectResponse
     {
         $valid = [
             'filejson' => 'required|file|max:2048000|mimetypes:application/json,text/plaint',
