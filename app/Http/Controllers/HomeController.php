@@ -181,4 +181,12 @@ class HomeController extends Controller
             return abort(404);
         }
     }
+
+    public function struktur_organisasi(): Factory|View|Application
+    {
+        $data = [
+            'pages' => 'struktur-organisasi',
+        ];
+        return view('struktur-organisasi', $data);
+    }
 }

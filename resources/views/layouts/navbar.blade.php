@@ -28,14 +28,20 @@
                         Visi-Misi
                     </a>
                 </li>
-                <li class="dropdown"><a href="#"><span>Struktur Organisasi</span> <i
-                            class="bi bi-chevron-right"></i></a>
-                    <ul>
-                        <li><a href="#">Madrasah</a></li>
-                        <li><a href="#">Komite</a></li>
-                        <li><a href="#">Osis</a></li>
-                    </ul>
+                <li>
+                    <a class="nav-link scrollto {{ ($pages === 'struktur') ? 'active' : '' }}"
+                       href="{{ route('struktur-organisasi') }}">
+                        Struktur Organisasi
+                    </a>
                 </li>
+{{--                <li class="dropdown"><a href="#"><span>Struktur Organisasi</span> <i--}}
+{{--                            class="bi bi-chevron-right"></i></a>--}}
+{{--                    <ul>--}}
+{{--                        <li><a href="#">Madrasah</a></li>--}}
+{{--                        <li><a href="#">Komite</a></li>--}}
+{{--                        <li><a href="#">Osis</a></li>--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
                 <li>
                     <a class="nav-link scrollto {{ ($pages === 'staff-pengajar') ? 'active' : '' }}"
                        href="{{ url('/tenaga-pendidik') }}">

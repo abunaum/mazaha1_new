@@ -177,6 +177,7 @@ class AdminFunction extends Controller
                     gs::create($datags);
                     Profile::create($profile);
                 } catch (\Exception $e) {
+                    dd($e->getMessage());
                     return back()->with('error', 'Restore Guru dan Staff gagal! <br> File backup corrupt');
                 }
             }

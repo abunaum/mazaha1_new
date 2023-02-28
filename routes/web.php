@@ -36,6 +36,7 @@ Route::get('/tenaga-kependidikan', [HomeController::class, 'tenaga_kependidikan'
 Route::get('/sambutah-kepala-madrasah', [HomeController::class, 'sambutan'])->name('sambutan');
 Route::get('/sejarah-madrasah', [HomeController::class, 'sejarah'])->name('sejarah');
 Route::get('/sarana-prasarana', [HomeController::class, 'sarpras'])->name('sarpras');
+Route::get('/struktur-organisasi', [HomeController::class, 'struktur_organisasi'])->name('struktur-organisasi');
 Route::get('/agenda', [AgendaController::class, 'list'])->name('agenda-list');
 Route::get('/agenda/detail/{id}', [AgendaController::class, 'show'])->name('agenda-detail');
 Route::get('/program/{id}', [HomeController::class, 'program'])->name('program');
