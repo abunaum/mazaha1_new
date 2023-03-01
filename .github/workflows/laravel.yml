@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOSTNAME }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: 22
-        script: |
-          cd /www/wwwroot/mazainulhasan1.me/core
-          git pull
-#          composer install
-#          php artisan migrate:fresh --seed
-          php artisan cache:clear
-          php artisan storage:link
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOSTNAME }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+                    cd /www/wwwroot/mazainulhasan1.me/core
+                    git pull
+            #          composer install
+            #          php artisan migrate:fresh --seed
+                    php artisan cache:clear
+                    php artisan storage:link
