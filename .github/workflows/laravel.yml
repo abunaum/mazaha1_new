@@ -18,9 +18,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-                    cd /www/wwwroot/mazainulhasan1.me/core
-                    git pull
-            #          composer install
-            #          php artisan migrate:fresh --seed
-                    php artisan cache:clear
-                    php artisan storage:link
+            cd /www/wwwroot/mazainulhasan1.me/core
+            git pull
+            php artisan storage:link
