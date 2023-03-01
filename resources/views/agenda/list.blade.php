@@ -80,7 +80,7 @@
             </div>
         @else
             <center>
-                <h1>Agenda tidak ditemukan.</h1>
+                <h1>Agenda tidak ditemukan!</h1>
             </center>
         @endif
     </section>
