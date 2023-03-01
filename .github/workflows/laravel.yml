@@ -22,3 +22,5 @@ jobs:
           git pull
 #          composer install
 #          php artisan migrate:fresh --seed
+          php artisan cache:clear
+          php artisan storage:link
