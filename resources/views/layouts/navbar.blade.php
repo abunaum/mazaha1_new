@@ -34,14 +34,6 @@
                         Struktur Organisasi
                     </a>
                 </li>
-{{--                <li class="dropdown"><a href="#"><span>Struktur Organisasi</span> <i--}}
-{{--                            class="bi bi-chevron-right"></i></a>--}}
-{{--                    <ul>--}}
-{{--                        <li><a href="#">Madrasah</a></li>--}}
-{{--                        <li><a href="#">Komite</a></li>--}}
-{{--                        <li><a href="#">Osis</a></li>--}}
-{{--                    </ul>--}}
-{{--                </li>--}}
                 <li>
                     <a class="nav-link scrollto {{ ($pages === 'staff-pengajar') ? 'active' : '' }}"
                        href="{{ url('/tenaga-pendidik') }}">
@@ -95,19 +87,17 @@
                 </li>
             </ul>
         </li>
-        <li class="dropdown">
-            <a href="#">
-                <span>Testimoni</span> <i class="bi bi-chevron-down"></i>
-            </a>
-            <ul>
-                <li><a class="nav-link scrollto" href="">Testimoni Alumni</a></li>
-                <li><a class="nav-link scrollto" href="">Sebaran Berita</a></li>
-            </ul>
-        </li>
+{{--        <li class="dropdown">--}}
+{{--            <a href="#">--}}
+{{--                <span>Testimoni</span> <i class="bi bi-chevron-down"></i>--}}
+{{--            </a>--}}
+{{--            <ul>--}}
+{{--                <li><a class="nav-link scrollto" href="">Testimoni Alumni</a></li>--}}
+{{--                <li><a class="nav-link scrollto" href="">Sebaran Berita</a></li>--}}
+{{--            </ul>--}}
+{{--        </li>--}}
         <li><a class="nav-link scrollto" href="{{route('kontak')}}">Kontak</a></li>
         <li><a class="getstarted scrollto" href="https://ppsb.mazainulhasan1.sch.id" target="_blank">PPSB</a></li>
-        {{--        <li><a class="nav-link scrollto" href="https://ppsb.mazainulhasan1.sch.id" target="_blank">PSB</a></li>--}}
-        {{--        <li><a class="nav-link scrollto {{ ($pages === 'berita') ? 'active' : '' }}" href="{{ url('/berita') }}">Berita</a></li>--}}
         {{--        <li><a class="getstarted scrollto" href="https://simumtaz.mazainulhasan1.sch.id" target="_blank">SIMUMTAZ</a></li>--}}
     </ul>
     <i class="bi bi-list mobile-nav-toggle"></i>
