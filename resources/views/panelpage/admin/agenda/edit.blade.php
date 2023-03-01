@@ -88,7 +88,7 @@
                     <div class="mb-3">
                         <label for="gambar" class="form-label">Gambar / Poster / Banner</label>
                         <input class="form-control @error('gambar') is-invalid @enderror mb-2" type="file" id="gambar" name="gambar" onchange="previewimg()">
-                        <img src="{{ url('/view-image?location='.$agenda->gambar) }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
+                        <img src="{{ url("storage.$agenda->gambar") }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
                         @error('gambar')
                         <div class="invalid-feedback">
                             {{ $message }}
