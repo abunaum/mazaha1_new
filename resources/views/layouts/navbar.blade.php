@@ -95,15 +95,15 @@
                 </li>
             </ul>
         </li>
-        <li class="dropdown">
-            <a href="#">
-                <span>Testimoni</span> <i class="bi bi-chevron-down"></i>
-            </a>
-            <ul>
-                <li><a class="nav-link scrollto" href="">Testimoni Alumni</a></li>
-                <li><a class="nav-link scrollto" href="">Sebaran Berita</a></li>
-            </ul>
-        </li>
+{{--        <li class="dropdown">--}}
+{{--            <a href="#">--}}
+{{--                <span>Testimoni</span> <i class="bi bi-chevron-down"></i>--}}
+{{--            </a>--}}
+{{--            <ul>--}}
+{{--                <li><a class="nav-link scrollto" href="">Testimoni Alumni</a></li>--}}
+{{--                <li><a class="nav-link scrollto" href="">Sebaran Berita</a></li>--}}
+{{--            </ul>--}}
+{{--        </li>--}}
         <li><a class="nav-link scrollto" href="{{route('kontak')}}">Kontak</a></li>
         <li><a class="getstarted scrollto" href="https://ppsb.mazainulhasan1.sch.id" target="_blank">PPSB</a></li>
         {{--        <li><a class="nav-link scrollto" href="https://ppsb.mazainulhasan1.sch.id" target="_blank">PSB</a></li>--}}
