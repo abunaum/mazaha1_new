@@ -18,7 +18,8 @@
                 <ul>
                     <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/profile') }}">Profile</a></li>
                     <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/visi-misi') }}">Visi & Misi</a></li>
-                    <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/staff-pengajar') }}">Staff Pengajar</a></li>
+                    <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/tenaga-pendidik') }}">Tenaga Pendidik</a></li>
+                    <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/tenaga-kependidikan') }}">Tenaga Kependidikan</a></li>
                 </ul>
             </div>
 
@@ -26,9 +27,9 @@
                 <h4>Layanan</h4>
                 <ul>
                     <li><i class="bx bx-chevron-right"></i> <a href="https://ppsb.mazainulhasan1.sch.id" target="_blank">PSB</a></li>
-{{--                    <li><i class="bx bx-chevron-right"></i> <a href="https://mazainulhasan1.sch.id" target="_blank">Berita</a></li>--}}
-                    <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/berita') }}">Berita</a></li>
                     <li><i class="bx bx-chevron-right"></i> <a href="https://simumtaz.mazainulhasan1.sch.id" target="_blank">SIMUMTAZ</a></li>
+                    <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/berita') }}">Berita</a></li>
+                    <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/agenda') }}">Agenda</a></li>
                 </ul>
             </div>
 
