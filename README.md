@@ -34,7 +34,6 @@ project lama :
 - **Lakukan perintah " git clone https://github.com/abunaum/mazaha1_new.git "**
 - **Masuk ke folder mazaha1_new**
 - **Lakukan perintah "composer install"**
-- **Edit file pada "vendor/laravel/framework/src/Illuminate/Foundation/Application.php" line ke 508 bagian "return $this->joinPaths($this->publicPath ?: $this->basePath('../public_html'), $path);" menjadi "return $this->joinPaths($this->publicPath ?: $this->basePath(env('APP_PUBLIC_FOLDER', 'public_html')), $path);".**
 - **Kembali ke directory home**
 - **Lakukan perintah " git clone https://github.com/abunaum/mazaha_public.git "**
 - **Salin semua file dan directory di dalam folder mazaha_public ke public_html**
