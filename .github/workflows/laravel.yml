@@ -20,5 +20,5 @@ jobs:
         script: |
           cd /www/wwwroot/mazainulhasan1.me/core
           git pull
-          composer install
-          php artisan migrate:fresh --seed
+#          composer install
+#          php artisan migrate:fresh --seed
