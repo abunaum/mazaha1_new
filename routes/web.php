@@ -33,7 +33,7 @@ Route::get('/profile', [HomeController::class, 'profile']);
 Route::get('/visi-misi', [HomeController::class, 'visi_misi']);
 Route::get('/tenaga-pendidik', [HomeController::class, 'tenaga_pendidik']);
 Route::get('/tenaga-kependidikan', [HomeController::class, 'tenaga_kependidikan']);
-Route::get('/sambutah-kepala-madrasah', [HomeController::class, 'sambutan'])->name('sambutan');
+Route::get('/sambutan-kepala-madrasah', [HomeController::class, 'sambutan'])->name('sambutan');
 Route::get('/sejarah-madrasah', [HomeController::class, 'sejarah'])->name('sejarah');
 Route::get('/sarana-prasarana', [HomeController::class, 'sarpras'])->name('sarpras');
 Route::get('/struktur-organisasi', [HomeController::class, 'struktur_organisasi'])->name('struktur-organisasi');
