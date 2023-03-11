@@ -254,6 +254,7 @@ class AgendaController extends Controller
         if (!$getdata) {
             return back()->with('error', 'Restore agenda gagal! <br> File yang di upload bukan file agenda.');
         }
+        agenda::truncate();
         foreach ($getdata as $data) {
             $newdata = [
                 'judul' => $data['judul'],
