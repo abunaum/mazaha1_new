@@ -50,7 +50,7 @@
     <section class="section dashboard">
         <div class="row">
             <div class="col-lg-8">
-                <form method="post" action="{{ route('post.update', $post->id)}}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('post-update', $post->id)}}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group mb-3">

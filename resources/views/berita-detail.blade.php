@@ -67,7 +67,6 @@
                         </center>
                         <hr class="mb-3">
                         <center>
-                            <a href="{{ URL::previous() }}" class="btn btn-success mb-3">Kembali</a>
                             <a href="{{ url('/berita') }}" class="btn btn-primary mb-3">Lihat Semua Berita</a>
                         </center>
                     </div>

@@ -50,7 +50,7 @@
     <section class="section dashboard">
         <div class="row">
             <div class="col-lg-8">
-                <form method="post" action="{{ $url_panel.'/post' }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('post-store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group mb-3">
                         <label for="judul">Judul</label>

@@ -77,13 +77,9 @@ class HomeController extends Controller
 
     public function berita(): Factory|View|Application
     {
-        $posts = Post::latest()
-            ->cari(request(['cari', 'kategori', 'author']))
-            ->paginate(7)
-            ->withQueryString();
         $data = [
             'pages' => 'berita',
-            'posts' => $posts,
+        'paginate' => 7,
         ];
         return view('berita', $data);
     }

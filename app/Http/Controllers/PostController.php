@@ -22,15 +22,9 @@ class PostController extends Controller
 {
     public function index(): Application|Factory|View
     {
-        $posts = Post::latest()
-            ->join('categories', 'categories.id', '=', 'posts.categori')
-            ->join('users', 'users.id', '=', 'posts.author')
-            ->select('posts.*', 'categories.nama as nama_kategori', 'users.name as nama_author')
-            ->get();
         $data = [
             'tab' => 'Blog',
             'pages' => 'Semua Post',
-            'ap' => $posts,
         ];
         return view('post.allpost', $data);
     }

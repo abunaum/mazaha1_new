@@ -4,6 +4,7 @@
     <link href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css" rel="stylesheet"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -56,6 +57,7 @@
                 <table id="sp" class="display table table-striped table-bordered nowrap mb-3" style="width:100%">
                     <thead>
                     <tr>
+                        <th scope="col">#</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col">Judul</th>
                         <th scope="col">Kategori</th>
@@ -64,27 +66,27 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($ap as $p)
-                        <tr>
-                            <td>{{ $p->created_at }}</td>
-                            <td>{{ $p->judul }}</td>
-                            <td>{{ $p->nama_kategori }}</td>
-                            <td>{{ $p->nama_author }}</td>
-                            <td>
-                                <form id="form-hps-{{ $p->id }}" action="{{ route('post.destroy', $p->id) }}"
-                                      method="post"
-                                      class="d-inline">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="button" class="btn btn-sm btn-danger"
-                                            onclick="hapus('{{ $p->judul }}','form-hps-{{ $p->id }}')">Hapus
-                                    </button>
-                                </form>
-                                <a class="btn btn-sm btn-warning d-inline m-1"
-                                   href="{{ route('post.edit', $p->id)}}">Edit</a>
-                            </td>
-                        </tr>
-                    @endforeach
+                    {{--                    @foreach($ap as $p)--}}
+                    {{--                        <tr>--}}
+                    {{--                            <td>{{ $p->created_at }}</td>--}}
+                    {{--                            <td>{{ $p->judul }}</td>--}}
+                    {{--                            <td>{{ $p->nama_kategori }}</td>--}}
+                    {{--                            <td>{{ $p->nama_author }}</td>--}}
+                    {{--                            <td>--}}
+                    {{--                                <form id="form-hps-{{ $p->id }}" action="{{ route('post-destroy', $p->id) }}"--}}
+                    {{--                                      method="post"--}}
+                    {{--                                      class="d-inline">--}}
+                    {{--                                    @csrf--}}
+                    {{--                                    @method('delete')--}}
+                    {{--                                    <button type="button" class="btn btn-sm btn-danger"--}}
+                    {{--                                            onclick="hapus('{{ $p->judul }}','form-hps-{{ $p->id }}')">Hapus--}}
+                    {{--                                    </button>--}}
+                    {{--                                </form>--}}
+                    {{--                                <a class="btn btn-sm btn-warning d-inline m-1"--}}
+                    {{--                                   href="{{ route('post-edit', $p->id)}}">Edit</a>--}}
+                    {{--                            </td>--}}
+                    {{--                        </tr>--}}
+                    {{--                    @endforeach--}}
                     </tbody>
                 </table>
                 <center>
@@ -93,7 +95,7 @@
                             data-bs-target="#restoreModal">
                         Restore
                     </button>
-                    <a class="btn btn-success m-3" href="{{ $url_panel.'/post/create' }}">Tambah</a>
+                    <a class="btn btn-success m-3" href="{{ route('post-create') }}">Tambah</a>
                 </center>
                 <div class="modal fade" id="restoreModal" tabindex="-1" aria-labelledby="restoreModalLabel">
                     <div class="modal-dialog modal-dialog-centered">
@@ -140,10 +142,69 @@
     <script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
+
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.13.4/sorting/datetime-moment.js"></script>
     <script>
         $(document).ready(function () {
+            moment.locale('id')
             var table = $('#sp').DataTable({
-                responsive: true
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json',
+                },
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'Tampilkan Semua'],
+                ],
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('api-blog') }}",
+                    "type": "POST",
+                    "headers": {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    "data": function (d) {
+                        d._token = $('meta[name="csrf-token"]').attr('content');
+                    }
+                },
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {
+                        data: 'created_at',
+                        name: 'created_at', render: function (data, type, row) {
+                            return moment(new Date(data).toString()).format('YYYY-MM-DD HH:mm');
+                        },
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'judul',
+                        name: 'judul',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'categori',
+                        name: 'categori',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'author',
+                        name: 'author',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: true,
+                        searchable: true
+                    },
+                ],
             });
             new $.fn.dataTable.FixedHeader(table);
         });

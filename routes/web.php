@@ -44,7 +44,7 @@ Route::get('/program/{id}', [HomeController::class, 'program'])->name('program')
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 Route::prefix('/berita')->group(function () {
     Route::get('/', [HomeController::class, 'berita']);
-    Route::get('/detail/{slug}', [HomeController::class, 'berita_detail']);
+    Route::get('/detail/{slug}', [HomeController::class, 'berita_detail'])->name('berita-detail');
 });
 
 
@@ -109,7 +109,17 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware('media')->group(function () {
             Route::get('/post/checkSlug', [PostController::class, 'checkSlug']);
-            Route::resource('/post', PostController::class)->except('show');
+            Route::resource('/post', PostController::class, [
+                'names' => [
+                    'index' => 'post',
+                    'create' => 'post-create',
+                    'store' => 'post-store',
+                    'edit' => 'post-edit',
+                    'update' => 'post-update',
+                    'destroy' => 'post-destroy',
+                ]
+            ])->except('show');
+//            Route::resource('/post', PostController::class)->except('show');
             Route::resource('/kategori', CategoriesController::class)->except('show', 'create', 'edit');
             Route::prefix('/posttb')->group(function () {
                 Route::get('/backup', [PostTableController::class, 'backup'])->name('backup-post');
@@ -120,7 +130,20 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::prefix('/api')->group(function () {
+
+Route::middleware('api')->group(function () {
+    Route::prefix('api')->group(function () {
+        Route::post('/blog', [APIController::class, 'blog'])->name('api-blog');
+        Route::get('/blog', [APIController::class, 'blog_front'])->name('api-blog-public');
+    });
+});
+
+Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
 });
+
+Route::get('/{any}', function () {
+    return redirect()->route('home');
+})->where('any', '.*');
+
 
