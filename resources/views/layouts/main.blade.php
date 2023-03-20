@@ -109,6 +109,8 @@
 <script src="{{ url('/') }}/assets/vendor/php-email-form/validate.js"></script>
 <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
 <script src="{{ url('/') }}/assets/panel/vendor/quill/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/id.js"></script>
 
 <!-- Template Main JS File -->
 <script src="{{ url('/') }}/assets/js/main.js"></script>

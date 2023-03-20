@@ -19,14 +19,31 @@
             border-color: #dee2e6;
         }
 
-        #loading {
-            display: none;
-            margin-top: 20px;
-            font-size: 24px;
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        #loading i {
-            font-size: 48px;
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #4285f4;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 @endsection
@@ -51,16 +68,20 @@
         </div>
     </div>
     <section>
-        <div class="container" data-aos="fade-up">
-            <div id="loading" class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
-            <div id="beritaatas"></div>
-        </div>
-        <div class="container">
-            <div id="loading" class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
-            <div class="row" id="beritabawah">
+        <div class="berita">
+            <div id="loading"  class="loading-container">
+                <div class="loading-spinner"></div>
             </div>
-            <div class="d-flex justify-content-center mt-3">
-                <div class="pagination"></div>
+            <div class="container" data-aos="fade-up">
+                <div id="beritaatas"></div>
+            </div>
+            <div class="container" id="berbawnya">
+                <div id="loading" class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+                <div class="row" id="beritabawah">
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+                    <div class="pagination"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -70,23 +91,53 @@
 
     <script>
         $('#search-form').on('submit', function (e) {
-            e.preventDefault(); // menghindari page reload pada form submit
-            const keyword = $('#search-input').val(); // ambil nilai inputan keyword pencarian
-            searchBerita(keyword); // jalankan fungsi pencarian
+            e.preventDefault();
+            const keyword = $('#search-input').val();
+            searchBerita(1, keyword);
         });
 
-        function searchBerita(keyword) {
-            $('.container > *:not(#loading)').hide();
+        function cariSpesifik(page, type, nama) {
+            $('#search-input').val('');
+            $('.berita > *:not(#loading)').hide();
             $('#loading').show();
+            const url = '{{ route("api-blog-public") }}?page=' + page + '&type=' + type + '&nama=' + nama;
             $.ajax({
-                url: '{{ route("api-blog-public") }}?search=' + keyword,
+                url: url,
                 type: 'GET',
                 dataType: 'json',
+                data: {
+                    'paginate': {{ $paginate }}
+                },
                 success: function (data) {
                     $('#loading').hide();
-                    $('.container > *:not(#loading)').show();
+                    $('.berita > *:not(#loading)').show();
+                    const tipe = 'filter';
+                    displayPagination(data, tipe, null, type, nama);
+                    // loop data
+                    loopdata(data.data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function searchBerita(page, keyword) {
+            $('.berita > *:not(#loading)').hide();
+            $('#loading').show();
+            const url = '{{ route("api-blog-public") }}?page=' + page + '&search=' + keyword;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    'paginate': {{ $paginate }}
+                },
+                success: function (data) {
+                    $('#loading').hide();
+                    $('.berita > *:not(#loading)').show();
                     const type = 'search';
-                    displayPagination(data, type);
+                    displayPagination(data, type, keyword, null, null);
                     // loop data
                     loopdata(data.data);
                 },
@@ -97,10 +148,11 @@
         }
 
         function getData(page) {
-            $('.container > *:not(#loading)').hide();
+            $('.berita > *:not(#loading)').hide();
             $('#loading').show();
+            const url= '{{ route("api-blog-public") }}?page=' + page;
             $.ajax({
-                url: '{{ route("api-blog-public") }}?page=' + page,
+                url: url,
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -108,9 +160,9 @@
                 },
                 success: function (data) {
                     $('#loading').hide();
-                    $('.container > *:not(#loading)').show();
+                    $('.berita > *:not(#loading)').show();
                     const type = 'full';
-                    displayPagination(data, type);
+                    displayPagination(data, type, null, null, null);
                     // loop data
                     loopdata(data.data);
                 },
@@ -120,7 +172,7 @@
             });
         }
 
-        function displayPagination(data, type) {
+        function displayPagination(data, type, keyword, tipe, nama) {
             $('.pagination').html('');
 
             var pagination = data.pagination;
@@ -132,12 +184,33 @@
 
             var html = '<nav aria-label="Page navigation"><ul class="pagination">';
 
-            html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage - 1) + ')">Previous</a></li>';
+            switch (type) {
+                case 'search':
+                    html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="searchBerita(' + (currentPage - 1) + ', \'' + keyword + '\')">Previous</a></li>';
+                    break;
+                case 'filter':
+                    html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="cariSpesifik(' + (currentPage - 1) + ', \'' + tipe + '\', \'' + nama + '\')">Previous</a></li>';
+                    break;
+                default:
+                    html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage - 1) + ')">Previous</a></li>';
+            }
+
+            // html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage - 1) + ')">Previous</a></li>';
 
             if (lastPage <= 5) {
                 for (var i = 1; i <= lastPage; i++) {
                     var activeClass = i === currentPage ? 'active' : '';
-                    html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
+                    switch (type) {
+                        case 'search':
+                            html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="searchBerita(' + i + ', \'' + keyword + '\')">' + i + '</a></li>';
+                            break;
+                        case 'filter':
+                            html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="cariSpesifik(' + i + ', \'' + tipe + '\', \'' + nama + '\')">' + i + '</a></li>';
+                            break;
+                        default:
+                            html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
+                    }
+                    // html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
                 }
             } else {
                 var startPage = 1;
@@ -151,20 +224,60 @@
                 }
 
                 if (startPage > 1) {
-                    html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (startPage - 1) + ')">&hellip;</a></li>';
+                    switch (type) {
+                        case 'search':
+                            html += '<li class="page-item"><a class="page-link" href="#" onclick="searchBerita(' + (startPage - 1) + ', \'' + keyword + '\')">&hellip;</a></li>';
+                            break;
+                        case 'filter':
+                            html += '<li class="page-item"><a class="page-link" href="#" onclick="cariSpesifik(' + (startPage - 1) + ', \'' + tipe + '\', \'' + nama + '\')">&hellip;</a></li>';
+                            break;
+                        default:
+                            html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (startPage - 1) + ')">&hellip;</a></li>';
+                    }
+                    // html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (startPage - 1) + ')">&hellip;</a></li>';
                 }
 
                 for (var i = startPage; i <= endPage; i++) {
                     var activeClass = i === currentPage ? 'active' : '';
-                    html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
+                    switch (type) {
+                        case 'search':
+                            html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="searchBerita(' + i + ', \'' + keyword + '\')">' + i + '</a></li>';
+                            break;
+                        case 'filter':
+                            html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="cariSpesifik(' + i + ', \'' + tipe + '\', \'' + nama + '\')">' + i + '</a></li>';
+                            break;
+                        default:
+                            html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
+                    }
+                    // html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
                 }
 
                 if (endPage < lastPage) {
-                    html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (endPage + 1) + ')">&hellip;</a></li>';
+                    switch (type) {
+                        case 'search':
+                            html += '<li class="page-item"><a class="page-link" href="#" onclick="searchBerita(' + (endPage + 1) + ', \'' + keyword + '\')">&hellip;</a></li>';
+                            break;
+                        case 'filter':
+                            html += '<li class="page-item"><a class="page-link" href="#" onclick="cariSpesifik(' + (endPage + 1) + ', \'' + tipe + '\', \'' + nama + '\')">&hellip;</a></li>';
+                            break;
+                        default:
+                            html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (endPage + 1) + ')">&hellip;</a></li>';
+                    }
+                    // html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (endPage + 1) + ')">&hellip;</a></li>';
                 }
             }
 
-            html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage + 1) + ')">Next</a></li></ul></nav>';
+            switch (type) {
+                case 'search':
+                    html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="searchBerita(' + (currentPage + 1) + ', \'' + keyword + '\')">Next</a></li></ul></nav>';
+                    break;
+                case 'filter':
+                    html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="cariSpesifik(' + (currentPage + 1) + ', \'' + tipe + '\', \'' + nama + '\')">Next</a></li></ul></nav>';
+                    break;
+                default:
+                    html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage + 1) + ')">Next</a></li></ul></nav>';
+            }
+            // html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage + 1) + ')">Next</a></li></ul></nav>';
 
             $('.pagination').html(html);
         }
@@ -188,7 +301,7 @@
                                     <text id="card-tanggal-1">.</text>
                                 </small>
                                 <br>
-                                <small class="text-muted">
+                                <small class="text-muted" id="card-categorinya">
                                     Kategori : <a href="#" id="card-kategori-1">nama_kategori</a>.
                                 </small>
                                 <br>
@@ -212,7 +325,7 @@
                         const id = index + 1;
                         const judul = value.judul;
                         const excerpt = value.excerpt;
-                        const tanggal = value.tanggal;
+                        const tanggal = moment(value.created_at, "YYYYMMDD").fromNow();
                         const kategori = value.categori;
                         const author = value.author;
                         const gambar = value.gambar;
@@ -232,15 +345,15 @@
           <a href="#" class="btn btn-primary mb-3" id="card-selengkapnya">Baca Selengkapnya</a>
           <p class="card-text">
             <small class="text-muted">
-              <text id="card-tanggal">Diposting : .</text>
+              <text id="card-tanggal">Diposting : ${moment(value.created_at, "YYYYMMDD").fromNow()}.</text>
             </small>
             <br>
             <small class="text-muted">
-              Kategori : <a href="#" id="card-kategori">${kategori}</a>.
+              Kategori : <a href="#" id="card-kategori" onclick="cariSpesifik(1,'kategori', '${kategori}')">${kategori}</a>.
             </small>
             <br>
             <small class="text-muted">
-              By : <a href="#" id="card-author">${author}</a>.
+              By : <a href="#" id="card-author" onclick="cariSpesifik(1,'author', '${author}')">${author}</a>.
             </small>
           </p>
         </div>
@@ -252,8 +365,15 @@
                             $('#card-judul-' + id).text(judul);
                             $('#card-excerpt-' + id).text(excerpt);
                             $('#card-tanggal-' + id).text(tanggal);
-                            $('#card-kategori-' + id).text(kategori);
-                            $('#card-author-' + id).text(author);
+                            $('#card-kategori-' + id).text(kategori).on('click', function () {
+                                const categtory = $(this).text();
+                                cariSpesifik(1, 'kategori', categtory)
+                            });
+                            $('#card-author-' + id).text(author).on('click', function () {
+                                const author = $(this).text();
+                                cariSpesifik(1, 'author', author)
+                            });
+                            ;
                             const urlslug = "{{ route('berita-detail', '') }}" + '/' + slug;
                             $('#card-selengkapnya-' + id).attr('href', urlslug);
                         }

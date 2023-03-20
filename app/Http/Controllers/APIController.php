@@ -65,6 +65,20 @@ class APIController extends Controller
                     ->orWhere('users.name', 'like', '%' . $search . '%');
             });
         }
+        if ($request->has('type') && !empty($request->type && $request->has('nama') && !empty($request->nama))) {
+            $type = $request->type;
+            $nama = $request->nama;
+            if ($type == 'kategori'){
+                $type = 'categories.nama';
+            } else {
+                $type = 'users.name';
+            }
+            $post->where(function ($q) use ($type, $nama) {
+                $q->Where($type, 'like', '%' . $nama . '%');
+            });
+        }
+
+
         $posts = $post->latest()->paginate($request->paginate ?? 10);
         $pagination = [
             'pagination' => [
