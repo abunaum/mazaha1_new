@@ -76,7 +76,6 @@
                 <div id="beritaatas"></div>
             </div>
             <div class="container" id="berbawnya">
-                <div id="loading" class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
                 <div class="row" id="beritabawah">
                 </div>
                 <div class="d-flex justify-content-center mt-3">
