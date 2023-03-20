@@ -140,10 +140,15 @@ Route::middleware('api')->group(function () {
 
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
+    Route::get('/test', function () {
+        return view('test');
+    });
+    Route::get('/ai', [APIController::class, 'openai'])->name('ai');
 });
 
 Route::get('/{any}', function () {
-    return redirect()->route('home');
+//    return redirect()->route('home');
+    return abort(404);
 })->where('any', '.*');
 
 

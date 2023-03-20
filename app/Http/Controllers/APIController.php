@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,7 +69,7 @@ class APIController extends Controller
         if ($request->has('type') && !empty($request->type && $request->has('nama') && !empty($request->nama))) {
             $type = $request->type;
             $nama = $request->nama;
-            if ($type == 'kategori'){
+            if ($type == 'kategori') {
                 $type = 'categories.nama';
             } else {
                 $type = 'users.name';
@@ -94,5 +95,49 @@ class APIController extends Controller
         $response = array_merge($posts->toArray(), $pagination);
 
         return response()->json($response);
+    }
+
+    // ai function request to api openai
+    public function openai(Request $request): JsonResponse
+    {
+        $prompt = $request->input('prompt');
+        $endpoint = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer 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',
+        ];
+
+// Set the request payload with the question
+        $payload = [
+            'prompt' => $prompt,
+            'max_tokens' => 150,
+            'temperature' => 0.7,
+        ];
+
+// Create a GuzzleHttp\Client instance for the request
+        $client = new Client();
+
+// Send the request and get the response
+        try {
+
+            $response = $client->post($endpoint, [
+                'headers' => $headers,
+                'json' => $payload,
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            $answer = $data['choices'][0]['text'];
+            $res = [
+                'message' => 'success',
+                'jawaban' => $answer,
+            ];
+            return response()->json($res);
+        } catch (\Exception $e) {
+            $res = [
+                'message' => 'error',
+                'jawaban' => 'System : mohon maaf AI ngantuk karena lupa ngopi, sehingga lupa jawab',
+            ];
+            return response()->json($res);
+        }
     }
 }
