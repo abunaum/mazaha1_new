@@ -269,12 +269,8 @@ class AgendaController extends Controller
         return back()->with('sukses', 'Restore agenda berhasil!');
     }
 
-    public function list()
+    public function list(): Factory|View|Application
     {
-//        $agendas = agenda::orderBy('waktu', 'desc')
-//            ->cari(request(['cari']))
-//            ->paginate(7)
-//            ->withQueryString();
         $data = [
             'paginate' => 6,
             'pages' => 'agenda',
