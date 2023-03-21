@@ -10,14 +10,6 @@
         <div class="container mt-3">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <form action="{{ url('/berita') }}">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Cari Berita" name="cari" id="cari">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">Cari</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

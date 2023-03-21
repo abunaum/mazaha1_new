@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\agenda;
 use App\Models\Post;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
@@ -93,6 +94,34 @@ class APIController extends Controller
         ];
 
         $response = array_merge($posts->toArray(), $pagination);
+
+        return response()->json($response);
+    }
+
+    public function agenda_front(Request $request)
+    {
+        $agenda = agenda::orderBy('waktu', 'desc');
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $agenda->where(function ($q) use ($search) {
+                $q->Where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('body', 'like', '%' . $search . '%')
+                    ->orWhere('tempat', 'like', '%' . $search . '%');
+            });
+        }
+        $agendas = $agenda->paginate($request->paginate ?? 10);
+        $pagination = [
+            'pagination' => [
+                'total' => $agendas->total(),
+                'per_page' => $agendas->perPage(),
+                'current_page' => $agendas->currentPage(),
+                'last_page' => $agendas->lastPage(),
+                'from' => $agendas->firstItem(),
+                'to' => $agendas->lastItem(),
+            ],
+        ];
+
+        $response = array_merge($agendas->toArray(), $pagination);
 
         return response()->json($response);
     }

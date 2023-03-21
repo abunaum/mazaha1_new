@@ -119,7 +119,6 @@ Route::middleware('auth')->group(function () {
                     'destroy' => 'post-destroy',
                 ]
             ])->except('show');
-//            Route::resource('/post', PostController::class)->except('show');
             Route::resource('/kategori', CategoriesController::class)->except('show', 'create', 'edit');
             Route::prefix('/posttb')->group(function () {
                 Route::get('/backup', [PostTableController::class, 'backup'])->name('backup-post');
@@ -135,15 +134,14 @@ Route::middleware('api')->group(function () {
     Route::prefix('api')->group(function () {
         Route::post('/blog', [APIController::class, 'blog'])->name('api-blog');
         Route::get('/blog', [APIController::class, 'blog_front'])->name('api-blog-public');
+        Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
     });
 });
 
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
-    Route::get('/test', function () {
-        return view('test');
-    });
     Route::get('/ai', [APIController::class, 'openai'])->name('ai');
+    Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
 });
 
 Route::get('/{any}', function () {

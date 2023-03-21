@@ -271,12 +271,12 @@ class AgendaController extends Controller
 
     public function list()
     {
-        $agendas = agenda::orderBy('waktu', 'desc')
-            ->cari(request(['cari']))
-            ->paginate(7)
-            ->withQueryString();
+//        $agendas = agenda::orderBy('waktu', 'desc')
+//            ->cari(request(['cari']))
+//            ->paginate(7)
+//            ->withQueryString();
         $data = [
-            'agendas' => $agendas,
+            'paginate' => 6,
             'pages' => 'agenda',
         ];
         return view('agenda.list', $data);

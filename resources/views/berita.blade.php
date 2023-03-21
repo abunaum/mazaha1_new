@@ -42,8 +42,12 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 @endsection
@@ -69,7 +73,7 @@
     </div>
     <section>
         <div class="berita">
-            <div id="loading"  class="loading-container">
+            <div id="loading" class="loading-container">
                 <div class="loading-spinner"></div>
             </div>
             <div class="container" data-aos="fade-up">
@@ -116,7 +120,23 @@
                     loopdata(data.data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
+                    $('#loading').hide();
+                    Swal.fire({
+                        title: 'Ooops!',
+                        html: `Gagal terkoneksi ke server.<br>Status: ${textStatus} ${errorThrown}`,
+                        icon: 'error',
+                        timer: 5000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                        },
+                        willClose: () => {
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                        }
+                    })
                 }
             });
         }
@@ -141,7 +161,23 @@
                     loopdata(data.data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
+                    $('#loading').hide();
+                    Swal.fire({
+                        title: 'Ooops!',
+                        html: `Gagal terkoneksi ke server.<br>Status: ${textStatus} ${errorThrown}`,
+                        icon: 'error',
+                        timer: 5000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                        },
+                        willClose: () => {
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                        }
+                    })
                 }
             });
         }
@@ -149,7 +185,7 @@
         function getData(page) {
             $('.berita > *:not(#loading)').hide();
             $('#loading').show();
-            const url= '{{ route("api-blog-public") }}?page=' + page;
+            const url = '{{ route("api-blog-public") }}?page=' + page;
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -166,7 +202,23 @@
                     loopdata(data.data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
+                    $('#loading').hide();
+                    Swal.fire({
+                        title: 'Ooops!',
+                        html: `Gagal terkoneksi ke server.<br>Status: ${textStatus} ${errorThrown}`,
+                        icon: 'error',
+                        timer: 5000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                        },
+                        willClose: () => {
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                        }
+                    })
                 }
             });
         }
@@ -194,8 +246,6 @@
                     html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage - 1) + ')">Previous</a></li>';
             }
 
-            // html += '<li class="page-item ' + prevClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage - 1) + ')">Previous</a></li>';
-
             if (lastPage <= 5) {
                 for (var i = 1; i <= lastPage; i++) {
                     var activeClass = i === currentPage ? 'active' : '';
@@ -209,7 +259,6 @@
                         default:
                             html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
                     }
-                    // html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
                 }
             } else {
                 var startPage = 1;
@@ -233,7 +282,6 @@
                         default:
                             html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (startPage - 1) + ')">&hellip;</a></li>';
                     }
-                    // html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (startPage - 1) + ')">&hellip;</a></li>';
                 }
 
                 for (var i = startPage; i <= endPage; i++) {
@@ -248,7 +296,6 @@
                         default:
                             html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
                     }
-                    // html += '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="getData(' + i + ')">' + i + '</a></li>';
                 }
 
                 if (endPage < lastPage) {
@@ -262,7 +309,6 @@
                         default:
                             html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (endPage + 1) + ')">&hellip;</a></li>';
                     }
-                    // html += '<li class="page-item"><a class="page-link" href="#" onclick="getData(' + (endPage + 1) + ')">&hellip;</a></li>';
                 }
             }
 
@@ -276,8 +322,6 @@
                 default:
                     html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage + 1) + ')">Next</a></li></ul></nav>';
             }
-            // html += '<li class="page-item ' + nextClass + '"><a class="page-link" href="#" onclick="getData(' + (currentPage + 1) + ')">Next</a></li></ul></nav>';
-
             $('.pagination').html(html);
         }
 
@@ -331,6 +375,7 @@
                         const slug = value.slug;
 
                         if (id >= 2) {
+                            const urlberitanya = "{{ route('berita-detail', '') }}" + '/' + slug;
                             const card = `
     <div class="col-md-4 mb-3">
       <div class="card" data-aos="fade-in">
@@ -341,7 +386,7 @@
         <div class="card-body">
           <h5 class="card-title" id="card-judul">${judul}</h5>
           <p class="ql-align-justify" id="card-excerpt">${excerpt}</p>
-          <a href="#" class="btn btn-primary mb-3" id="card-selengkapnya">Baca Selengkapnya</a>
+          <a href="${urlberitanya}" class="btn btn-primary mb-3" id="card-selengkapnya">Baca Selengkapnya</a>
           <p class="card-text">
             <small class="text-muted">
               <text id="card-tanggal">Diposting : ${moment(value.created_at, "YYYYMMDD").fromNow()}.</text>
