@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\agenda;
 use App\Models\Post;
-use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\ResponseFactory;
 use Yajra\DataTables\Facades\DataTables;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class APIController extends Controller
 {
@@ -130,43 +130,64 @@ class APIController extends Controller
     public function openai(Request $request): JsonResponse
     {
         $prompt = $request->input('prompt');
-        $endpoint = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
-        $headers = [
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer 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',
-        ];
-
-// Set the request payload with the question
-        $payload = [
-            'prompt' => $prompt,
-            'max_tokens' => 150,
-            'temperature' => 0.7,
-        ];
-
-// Create a GuzzleHttp\Client instance for the request
-        $client = new Client();
-
-// Send the request and get the response
         try {
-
-            $response = $client->post($endpoint, [
-                'headers' => $headers,
-                'json' => $payload,
+            $result = OpenAI::completions()->create([
+                'model' => 'text-davinci-003',
+                'prompt' => $prompt,
+                'max_tokens' => 150,
+                'temperature' => 1
             ]);
-
-            $data = json_decode($response->getBody(), true);
-            $answer = $data['choices'][0]['text'];
+            $answer = $result['choices'][0]['text'];
             $res = [
                 'message' => 'success',
                 'jawaban' => $answer,
+                'result' => $result->id
             ];
             return response()->json($res);
         } catch (\Exception $e) {
             $res = [
                 'message' => 'error',
-                'jawaban' => 'System : mohon maaf AI ngantuk karena lupa ngopi, sehingga lupa jawab',
+                'jawaban' => 'System : mohon maaf AI ngantuk karena lupa ngopi, sehingga lupa jawab ' . $e->getMessage(),
             ];
             return response()->json($res);
         }
+//
+//
+//
+//        $endpoint = 'https://api.openai.com/v1/engines/text-babbage-001/completions';
+//        $headers = [
+//            'Content-Type' => 'application/json',
+//            'Authorization' => 'Bearer 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',
+//        ];
+//
+//        $payload = [
+//            'prompt' => $prompt,
+//            'max_tokens' => 150,
+//            'temperature' => 1,
+//        ];
+//
+//        $client = new Client();
+//
+//        try {
+//
+//            $response = $client->post($endpoint, [
+//                'headers' => $headers,
+//                'json' => $payload,
+//            ]);
+//
+//            $data = json_decode($response->getBody(), true);
+//            $answer = $data['choices'][0]['text'];
+//            $res = [
+//                'message' => 'success',
+//                'jawaban' => $answer,
+//            ];
+//            return response()->json($res);
+//        } catch (\Exception $e) {
+//            $res = [
+//                'message' => 'error',
+//                'jawaban' => 'System : mohon maaf AI ngantuk karena lupa ngopi, sehingga lupa jawab ' . $e->getMessage(),
+//            ];
+//            return response()->json($res);
+//        }
     }
 }

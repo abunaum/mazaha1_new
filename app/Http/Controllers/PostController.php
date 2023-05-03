@@ -94,6 +94,7 @@ class PostController extends Controller
     public function show(Post $post): Response
     {
         //
+        return response('show');
     }
 
     /**
@@ -124,7 +125,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdatePostRequest $request
+     * @param Request $request
      * @param Post $post
      * @return RedirectResponse
      */

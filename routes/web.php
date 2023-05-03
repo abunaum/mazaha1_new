@@ -141,6 +141,9 @@ Route::middleware('api')->group(function () {
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
     Route::get('/ai', [APIController::class, 'openai'])->name('ai');
+    Route::get('/test', function () {
+        return view('test');
+    });
     Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
 });
 
