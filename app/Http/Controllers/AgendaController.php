@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -226,21 +227,22 @@ class AgendaController extends Controller
         }
         $fixagenda = ['dataagenda' => $agendanya];
         $jsonagenda = json_encode($fixagenda);
+
+        $jsonagenda = Crypt::encrypt($jsonagenda);
         return response($jsonagenda, 200, [
-            'Content-Disposition' => 'attachment; filename="agenda-' . time() . '.json"'
+            'Content-Disposition' => 'attachment; filename="agenda-' . time() . '.mazaha"'
         ]);
     }
 
     public function restore(Request $request)
     {
         $valid = [
-            'filejson' => 'required|file|max:2048000|mimetypes:application/json,text/plaint',
+            'filejson' => 'required|file|max:2048000',
         ];
         $message = [
             'filejson.required' => 'File restore wajib ada.',
             'filejson.file' => 'File yang di upload bukan file yang benar.',
             'filejson.max' => 'Ukuran File maksimal 2 GB.',
-            'filejson.mimetypes' => 'Ekstensi file yang di izinkan adalah json.',
         ];
         $validator = Validator::make($request->all(), $valid, $message);
 
@@ -248,6 +250,7 @@ class AgendaController extends Controller
             return back()->with('error', 'Restore agenda gagal!')->withErrors($validator)->withInput();
         }
         $data = file_get_contents($request->filejson);
+        $data = Crypt::decrypt($data);
         $arrdata = json_decode($data, true);
 
         $getdata = $arrdata['dataagenda'] ?? null;

@@ -22,9 +22,9 @@ class VerifyRequestIsInternal
 
         if (parse_url($referer, PHP_URL_HOST) !== parse_url($allowedReferer, PHP_URL_HOST)) {
             return response()->json([
-                'error' => '403 Forbidden',
-                'code' => '403',
-                'message' => 'Anda tidak diizinkan mengakses API ini.',
+                'error' => 'Not allowed',
+                'refer' => parse_url($referer, PHP_URL_HOST),
+                'allowed' => parse_url($allowedReferer, PHP_URL_HOST),
             ], 403);
         }
 

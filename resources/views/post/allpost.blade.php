@@ -66,27 +66,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{--                    @foreach($ap as $p)--}}
-                    {{--                        <tr>--}}
-                    {{--                            <td>{{ $p->created_at }}</td>--}}
-                    {{--                            <td>{{ $p->judul }}</td>--}}
-                    {{--                            <td>{{ $p->nama_kategori }}</td>--}}
-                    {{--                            <td>{{ $p->nama_author }}</td>--}}
-                    {{--                            <td>--}}
-                    {{--                                <form id="form-hps-{{ $p->id }}" action="{{ route('post-destroy', $p->id) }}"--}}
-                    {{--                                      method="post"--}}
-                    {{--                                      class="d-inline">--}}
-                    {{--                                    @csrf--}}
-                    {{--                                    @method('delete')--}}
-                    {{--                                    <button type="button" class="btn btn-sm btn-danger"--}}
-                    {{--                                            onclick="hapus('{{ $p->judul }}','form-hps-{{ $p->id }}')">Hapus--}}
-                    {{--                                    </button>--}}
-                    {{--                                </form>--}}
-                    {{--                                <a class="btn btn-sm btn-warning d-inline m-1"--}}
-                    {{--                                   href="{{ route('post-edit', $p->id)}}">Edit</a>--}}
-                    {{--                            </td>--}}
-                    {{--                        </tr>--}}
-                    {{--                    @endforeach--}}
                     </tbody>
                 </table>
                 <center>
@@ -112,7 +91,7 @@
                                         dengan post yang di upload!!!</p>
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="filejson" class="form-label">File.json</label>
+                                        <label for="filejson" class="form-label">File Backup</label>
                                         <input class="form-control @error('filejson') is-invalid @enderror mb-2"
                                                type="file" id="filejson" name="filejson" required>
                                         @error('filejson')
@@ -144,7 +123,7 @@
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
 
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
-    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.13.4/sorting/datetime-moment.js"></script>
     <script>
         $(document).ready(function () {

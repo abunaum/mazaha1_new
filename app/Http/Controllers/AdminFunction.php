@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -113,21 +114,21 @@ class AdminFunction extends Controller
         }
         $fixgs = ['datags' => $gsnya];
         $jsongs = json_encode($fixgs);
+        $jsongs = Crypt::encrypt($jsongs);
         return response($jsongs, 200, [
-            'Content-Disposition' => 'attachment; filename="gs-' . time() . '.json"'
+            'Content-Disposition' => 'attachment; filename="gs-' . time() . '.mazaha"'
         ]);
     }
 
     public function restore_gs(Request $request)
     {
         $valid = [
-            'filejson' => 'required|file|max:2048000|mimetypes:application/json,text/plaint',
+            'filejson' => 'required|file|max:2048000',
         ];
         $message = [
             'filejson.required' => 'File restore wajib ada.',
             'filejson.file' => 'File yang di upload bukan file yang benar.',
             'filejson.max' => 'Ukuran File maksimal 2 GB.',
-            'filejson.mimetypes' => 'Ekstensi file yang di izinkan adalah json.',
         ];
         $validator = Validator::make($request->all(), $valid, $message);
 
@@ -135,6 +136,7 @@ class AdminFunction extends Controller
             return back()->with('error', 'Restore post gagal!')->withErrors($validator)->withInput();
         }
         $data = file_get_contents($request->filejson);
+        $data = Crypt::decrypt($data);
         $arrdata = json_decode($data, true);
 
         $getdata = $arrdata['datags'] ?? null;

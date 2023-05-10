@@ -101,9 +101,6 @@ Route::middleware('auth')->group(function () {
                         'destroy' => 'program-hapus',
                     ]
                 ])->except('show');
-//                Route::get('/siswa', [AdminController::class, 'siswa']);
-//                Route::get('/kelas', [AdminController::class, 'kelas']);
-//                Route::get('/mapel', [AdminController::class, 'mapel']);
             });
         });
 

@@ -115,7 +115,7 @@
                                     <p style="color: #77181f">Restore akan menghapus guru dan staff yang ada dan akan menimpa dengan guru dan staff yang di upload!!!</p>
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="filejson" class="form-label">File.json</label>
+                                        <label for="filejson" class="form-label">File Backup</label>
                                         <input class="form-control @error('filejson') is-invalid @enderror mb-2"
                                                type="file" id="filejson" name="filejson" required>
                                         @error('filejson')
