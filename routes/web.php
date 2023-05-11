@@ -36,10 +36,12 @@ Route::get('/tenaga-kependidikan', [HomeController::class, 'tenaga_kependidikan'
 Route::get('/sambutan-kepala-madrasah', [HomeController::class, 'sambutan'])->name('sambutan');
 Route::get('/sejarah-madrasah', [HomeController::class, 'sejarah'])->name('sejarah');
 Route::get('/sarana-prasarana', [HomeController::class, 'sarpras'])->name('sarpras');
+Route::get('/program', [HomeController::class, 'program'])->name('program-view');
+
 Route::get('/struktur-organisasi', [HomeController::class, 'struktur_organisasi'])->name('struktur-organisasi');
 Route::get('/agenda', [AgendaController::class, 'list'])->name('agenda-list');
 Route::get('/agenda/detail/{id}', [AgendaController::class, 'show'])->name('agenda-detail');
-Route::get('/program/{id}', [HomeController::class, 'program'])->name('program');
+Route::get('/program-list/{id}', [HomeController::class, 'program_list'])->name('program');
 //Route::get('/ppdb', [HomeController::class, 'ppdb']);
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 Route::prefix('/berita')->group(function () {

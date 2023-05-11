@@ -79,7 +79,7 @@ class HomeController extends Controller
     {
         $data = [
             'pages' => 'berita',
-        'paginate' => 7,
+            'paginate' => 7,
         ];
         return view('berita', $data);
     }
@@ -164,7 +164,47 @@ class HomeController extends Controller
         return view('sarpras', $data);
     }
 
-    public function program($id = 0)
+    public function program(): View|Factory|Application
+    {
+        $extra = [
+            [
+                'image' => 'pramuka.jpg',
+                'title' => 'Pramuka',
+            ],
+            [
+                'image' => 'reactjs.jpg',
+                'title' => 'KIR',
+            ],
+            [
+                'image' => 'al-quran.png',
+                'title' => 'Tartilul Qur\'an',
+            ],
+            [
+                'image' => 'silat.jpg',
+                'title' => 'Pagar Nusa',
+            ],
+            [
+                'image' => 'english_club.jpg',
+                'title' => 'English Club',
+            ],
+            [
+                'image' => 'arabic.jpg',
+                'title' => 'Arabic Club',
+            ],
+            [
+                'image' => 'piala.jpg',
+                'title' => 'Kelas Olimpiade',
+            ]
+
+        ];
+        $data = [
+            'pages' => 'program',
+            'extra' => $extra,
+        ];
+        return view('program', $data);
+    }
+
+    public function program_list($id = 0): View|Factory|Application
     {
         $program = program::where('id', $id)->first();
         if ($program) {
@@ -172,7 +212,7 @@ class HomeController extends Controller
                 'pages' => 'program',
                 'program' => $program,
             ];
-            return view('program', $data);
+            return view('program_list', $data);
         } else {
             return abort(404);
         }

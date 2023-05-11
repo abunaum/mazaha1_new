@@ -52,6 +52,7 @@
                 </li>
             </ul>
         </li>
+        <li><a class="nav-link scrollto" href="{{route('program-view')}}">Program</a></li>
         <li class="dropdown">
             <a href="#">
                 <span>Program</span> <i class="bi bi-chevron-down"></i>
@@ -68,7 +69,7 @@
                                 class="bi bi-chevron-right"></i></a>
                         <ul>
                             @foreach($value as $key2 => $prog)
-                                <li><a href="{{ url("/program/$prog->id") }}">{{ $prog->nama }}</a></li>
+                                <li><a href="{{ url("/program-list/$prog->id") }}">{{ $prog->nama }}</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -87,18 +88,8 @@
                 </li>
             </ul>
         </li>
-{{--        <li class="dropdown">--}}
-{{--            <a href="#">--}}
-{{--                <span>Testimoni</span> <i class="bi bi-chevron-down"></i>--}}
-{{--            </a>--}}
-{{--            <ul>--}}
-{{--                <li><a class="nav-link scrollto" href="">Testimoni Alumni</a></li>--}}
-{{--                <li><a class="nav-link scrollto" href="">Sebaran Berita</a></li>--}}
-{{--            </ul>--}}
-{{--        </li>--}}
         <li><a class="nav-link scrollto" href="{{route('kontak')}}">Kontak</a></li>
         <li><a class="getstarted scrollto" href="https://ppsb.mazainulhasan1.sch.id" target="_blank">PPSB</a></li>
-        {{--        <li><a class="getstarted scrollto" href="https://simumtaz.mazainulhasan1.sch.id" target="_blank">SIMUMTAZ</a></li>--}}
     </ul>
     <i class="bi bi-list mobile-nav-toggle"></i>
 </nav>
