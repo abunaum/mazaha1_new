@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
 
         Profile::create([
             'uid' => 1,
-            'image' => null,
             'telegram' => null,
             'instagram' => null,
             'facebook' => null,
@@ -52,7 +51,6 @@ class DatabaseSeeder extends Seeder
 
         Profile::create([
             'uid' => 2,
-            'image' => null,
             'telegram' => null,
             'instagram' => null,
             'facebook' => null,
@@ -69,7 +67,6 @@ class DatabaseSeeder extends Seeder
 
         Profile::create([
             'uid' => 3,
-            'image' => null,
             'telegram' => null,
             'instagram' => null,
             'facebook' => null,
@@ -86,7 +83,6 @@ class DatabaseSeeder extends Seeder
 
         Profile::create([
             'uid' => 4,
-            'image' => null,
             'telegram' => null,
             'instagram' => null,
             'facebook' => null,
@@ -103,7 +99,6 @@ class DatabaseSeeder extends Seeder
 
         Profile::create([
             'uid' => 5,
-            'image' => null,
             'telegram' => null,
             'instagram' => null,
             'facebook' => null,
