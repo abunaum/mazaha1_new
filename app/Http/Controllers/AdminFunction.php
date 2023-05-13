@@ -9,6 +9,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -17,14 +18,18 @@ class AdminFunction extends Controller
 {
     public function tambah_gs(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nama' => 'required',
             'jabatan' => 'required',
             'email' => 'required|email:rfc,dns|unique:users,email',
             'username' => 'required|unique:users,username',
             'password' => 'required',
             'role' => 'required',
-        ]);
+        ];
+        if ($request->file('foto')) {
+            $rules['foto'] = 'image|file|max:2048|mimes:jpeg,png,jpg,gif,svg';
+        }
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return back()->with('error', 'Tambah data gagal!')->withErrors($validator)->withInput();
@@ -37,6 +42,14 @@ class AdminFunction extends Controller
             'role' => $request->role,
             'is_active' => 1,
         ];
+        if ($request->file('foto')) {
+            try {
+
+                $user['image'] = $request->file('foto')->store('gambar-user');
+            } catch (\Throwable $th) {
+                return back()->with('error', 'Guru / Staff gagal di tambah! <br> ' . 'Gagal Upload foto');
+            }
+        }
         $user = User::create($user);
         $gs = [
             'uid' => $user->id,
@@ -60,11 +73,20 @@ class AdminFunction extends Controller
             'role' => 'required',
         ];
 
-        if ($request->email !== $uid->email) {
+        if ($uid->email == $request->email) {
+            $rules['email'] = 'required|email:rfc,dns';
+        } else {
             $rules['email'] = 'required|email:rfc,dns|unique:users,email';
         }
-        if ($request->username !== $uid->username) {
+
+        if ($uid->username == $request->username) {
+            $rules['username'] = 'required';
+        } else {
             $rules['username'] = 'required|unique:users,username';
+        }
+
+        if ($request->file('foto')) {
+            $rules['foto'] = 'image|file|max:2048|mimes:jpeg,png,jpg,gif,svg';
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -85,6 +107,24 @@ class AdminFunction extends Controller
             'bidang_studi' => $request->bidang_studi,
             'no_hp' => $request->nohp,
         ];
+        $fotoori = $uid->image;
+        if ($request->file('foto')) {
+            if ($fotoori != 'user.png') {
+                try {
+                    Storage::delete($fotoori);
+                    $user['image'] = $request->file('foto')->store('gambar-user');
+                } catch (\Throwable $th) {
+                    return back()->with('error', 'Guru / Staff gagal diedit! <br> ' . 'Gagal Hapus Foto Lama');
+                }
+            } else {
+                try {
+
+                    $user['image'] = $request->file('foto')->store('gambar-user');
+                } catch (\Throwable $th) {
+                    return back()->with('error', 'Guru / Staff gagal diedit! <br> ' . 'Gagal Upload foto');
+                }
+            }
+        }
 
         User::where('id', $uid->id)->update($user);
         gs::where('id', $idgs)->update($gs);
@@ -104,7 +144,7 @@ class AdminFunction extends Controller
     {
         $gs = gs::join('users', 'users.id', '=', 'gs.uid')
             ->join('profiles', 'profiles.uid', '=', 'gs.uid')
-            ->select('users.*', 'gs.*', 'profiles.*')
+            ->select('users.*', 'users.image as gambar', 'gs.*', 'profiles.*')
             ->get();
         $gsnya = [];
         foreach ($gs as $g) {
@@ -160,6 +200,7 @@ class AdminFunction extends Controller
                         'password' => $dp['password'],
                         'role' => 'guru',
                         'is_active' => 1,
+                        'image' => $dp['gambar']
                     ];
                     $user = User::create($datauser);
                     $datags = [

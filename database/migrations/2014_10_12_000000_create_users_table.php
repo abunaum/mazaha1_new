@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('role')->default('user');
             $table->boolean('is_active')->default(true);
             $table->string('password');
+            $table->string('image')->default('user.png');
             $table->rememberToken();
             $table->timestamps();
         });

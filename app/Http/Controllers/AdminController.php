@@ -38,6 +38,7 @@ class AdminController extends Controller
             'pages' => 'Guru & Staff',
             'gs' => $user,
         ];
+//        dd($user);
         return view('panelpage.admin.gs-edit', $data);
     }
 

@@ -15,7 +15,7 @@ class gs extends Model
     {
         $query->join('users', 'users.id', '=', 'gs.uid')
             ->join('profiles', 'profiles.uid', '=', 'gs.uid')
-            ->select('users.*', 'gs.*', 'profiles.*')
+            ->select('users.*', 'users.image as gambar', 'gs.*', 'profiles.*')
             ->orderBy('users.name', 'asc');
 
         $query->when($filter['cari'] ?? null, function ($query, $cari) {
@@ -26,6 +26,11 @@ class gs extends Model
         });
 
         return $query;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'uid', 'id');
     }
 
 }

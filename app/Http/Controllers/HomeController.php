@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\ResponseFactory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yaza\LaravelGoogleDriveStorage\Gdrive;
 
@@ -106,11 +107,11 @@ class HomeController extends Controller
         $request->query('location');
         if (!empty($request->query('location'))) {
             $lokasi = $request->query('location');
-            $gambar = Gdrive::get($lokasi);
-            if ($gambar->file == null) {
+            $gambar = Storage::get($lokasi);
+            if ($gambar == null) {
                 return abort(404);
             } else {
-                return response($gambar->file, 200)->header('Content-Type', $gambar->ext);
+                return response($gambar, 200)->header('Content-Type', '.jpg');
             }
         } else {
             return abort(404);

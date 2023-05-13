@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yaza\LaravelGoogleDriveStorage\Gdrive;
 
@@ -86,6 +87,7 @@ class ProfileController extends Controller
     {
         $user = User::join('profiles', 'profiles.uid', '=', 'users.id')
             ->where('users.id', auth()->user()->id)
+            ->select('profiles.*', 'users.*')
             ->first();
         if ($jenis === 'password') {
             $valid = [
@@ -144,23 +146,18 @@ class ProfileController extends Controller
                 'instagram' => $request->instagram,
             ];
             if ($request->file('gambar')) {
-                $filename = md5(date('Y-m-d H:i:s:u') . '-' . $request->file('gambar')->getFilename());
-                if ($user->image !== null) {
+                if ($user->image != 'user.png') {
                     try {
-                        Gdrive::delete($user->image);
-                        $pathandfile = 'gambar-user/' . $filename . '.jpg';
-                        Gdrive::put($pathandfile, $request->file('gambar'));
-                        $dataprofile['image'] = $pathandfile;
+                        Storage::delete($user->image);
+                        $datauser['image'] = $request->file('gambar')->store('gambar-user');
                     } catch (\Throwable $th) {
-                        return back()->with('error', 'Post gagal ditambahkan! <br> ' . 'Gagal Hapus Gambar Lama');
+                        return back()->with('error', 'Gagal edit profile! <br> ' . 'Gagal Hapus Foto Lama');
                     }
                 } else {
                     try {
-                        $pathandfile = 'gambar-user/' . $filename . '.jpg';
-                        Gdrive::put($pathandfile, $request->file('gambar'));
-                        $dataprofile['image'] = $pathandfile;
+                        $datauser['image'] = $request->file('foto')->store('gambar-user');
                     } catch (\Throwable $th) {
-                        return back()->with('error', 'Post gagal ditambahkan! <br> ' . 'Gagal Upload ke Gdrive');
+                        return back()->with('error', 'Gagal edit profile! <br> ' . 'Gagal Upload foto');
                     }
                 }
             }
@@ -178,10 +175,10 @@ class ProfileController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy($id): Response
+    public function destroy($id): RedirectResponse
     {
-        //
+        return redirect()->to(url());
     }
 }

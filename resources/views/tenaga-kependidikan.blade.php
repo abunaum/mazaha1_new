@@ -50,22 +50,24 @@
                         <div class="col-lg-6 mb-3">
                             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
                                 <div class="pic">
-                                    <img src="assets/img/user.png" class="img-fluid img-id-{{ $sp->id }}" alt="">
+                                    <img
+                                        src="{{ $sp->gambar !== 'user.png' ? asset('storage/'.$sp->gambar) : asset('assets/img/user.png') }}"
+                                        class="img-fluid img-id-{{ $sp->id }}" alt="">
                                 </div>
                                 <div class="member-info">
                                     <h4>{{ $sp->name }}</h4>
                                     <span>Jabatan : {{ $sp->jabatan }}</span>
                                     <p>No HP : {{ $sp->no_hp }}</p>
                                     <div class="social">
-                                            <a onclick="sosial('telegram', '{{ $sp->telegram }}')">
-                                                <i class="ri-telegram-fill"></i>
-                                            </a>
-                                            <a onclick="sosial('facebook', '{{ $sp->facebook }}')">
-                                                <i class="ri-facebook-fill"></i>
-                                            </a>
-                                            <a onclick="sosial('instagram', '{{ $sp->instagram }}')">
-                                                <i class="ri-instagram-fill"></i>
-                                            </a>
+                                        <a onclick="sosial('telegram', '{{ $sp->telegram }}')">
+                                            <i class="ri-telegram-fill"></i>
+                                        </a>
+                                        <a onclick="sosial('facebook', '{{ $sp->facebook }}')">
+                                            <i class="ri-facebook-fill"></i>
+                                        </a>
+                                        <a onclick="sosial('instagram', '{{ $sp->instagram }}')">
+                                            <i class="ri-instagram-fill"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -89,38 +91,7 @@
 @endsection
 
 @section('scripts')
-    @php
-    $newdata = [];
-    for ($i = 0; $i < count($gs); $i++) {
-        $setdata = [
-            'id' => $gs[$i]->id,
-            'image' => $gs[$i]->image
-        ];
-        array_push($newdata, $setdata);
-    }
-    $newdata = json_encode($newdata);
-    @endphp
     <script>
-        $(document).ready(function () {
-            const data = {!! $newdata !!};
-            data.forEach(function (d) {
-                if (d.image !== null) {
-                    const url = '/view-image?location=' + d.image;
-                    const image = $('.img-id-' + d.id);
-                    changeimage(url, image)
-                }
-            });
-        });
-
-        function changeimage(url, image) {
-            fetch(url)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    image.attr('src', url);
-                });
-        }
-
         function sosial(sosial, username) {
             switch (sosial) {
                 case 'telegram':

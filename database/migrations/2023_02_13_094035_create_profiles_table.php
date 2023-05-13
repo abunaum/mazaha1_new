@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('uid')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('image')->nullable();
             $table->string('telegram')->nullable();
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();

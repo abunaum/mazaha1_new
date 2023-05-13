@@ -143,7 +143,7 @@
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="row g-3" action="{{ route('gs-tambah') }}" method="POST">
+                                <form class="row g-3" action="{{ route('gs-tambah') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="col-md-12">
                                         <label for="nama" class="form-label">Nama</label>
@@ -220,6 +220,16 @@
                                         <input type="text" class="form-control" id="nohp" name="nohp"
                                                placeholder="08xxxxxxxxx">
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="foto" class="form-label">Gambar</label>
+                                        <input class="form-control @error('foto') is-invalid @enderror mb-2" type="file" id="foto" name="foto" onchange="previewimg()">
+                                        <img src="{{ asset('assets/img/user.png') }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
+                                        @error('foto')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
                                     <div class="text-center">
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal
                                         </button>
@@ -263,6 +273,16 @@
                     this.form.submit();
                 }
             })
+        }
+        function previewimg() {
+            const gambar = document.querySelector('#foto');
+            const gambarprev = document.querySelector('.gambarprev');
+            const filegambar = new FileReader();
+            filegambar.readAsDataURL(gambar.files[0]);
+
+            filegambar.onload = function (e) {
+                gambarprev.src = e.target.result;
+            }
         }
     </script>
 @endsection

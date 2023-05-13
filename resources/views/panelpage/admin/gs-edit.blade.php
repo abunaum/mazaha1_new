@@ -56,7 +56,7 @@
                 <center>
                     <h1>Edit ({{ $gs->name }})</h1>
                 </center>
-                <form class="row g-3" action="{{ route('gs-edit-progress', $gs->uid) }}" method="POST">
+                <form class="row g-3" action="{{ route('gs-edit-progress', $gs->uid) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="col-md-12">
@@ -82,7 +82,7 @@
                     <div class="col-md-4">
                         <label for="bidang_studi" class="form-label">Bidang Studi</label>
                         <input type="text" class="form-control" id="bidang_studi" name="bidang_studi"
-                               placeholder="Bidang Studi" value="{{ old('bidang_studi',$gs->bidang_studi) }}">
+                               placeholder="Bidang Studi" value="{{ old('bidang_studi',$gs->bidang_studi !== "" ? $gs->bidang_studi : "-") }}">
                     </div>
                     <div class="col-md-4">
                         <label for="role" class="form-label">Role</label>
@@ -124,6 +124,16 @@
                         <input type="text" class="form-control" id="nohp" name="nohp"
                                placeholder="08xxxxxxxxx" value="{{ old('nohp',$gs->no_hp) }}">
                     </div>
+                    <div class="mb-3">
+                        <label for="foto" class="form-label">Gambar</label>
+                        <input class="form-control @error('foto') is-invalid @enderror mb-2" type="file" id="foto" name="foto" onchange="previewimg()">
+                        <img src="{{ $gs->image !== 'user.png' ? asset('storage/'.$gs->image) : asset('assets/img/user.png') }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
+                        @error('foto')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
                     <div class="text-center">
                         <a href="{{ route('guru-staff') }}" class="btn btn-danger">Batal</a>
                         <button type="submit" class="btn btn-success">Edit</button>
@@ -147,5 +157,15 @@
             });
             new $.fn.dataTable.FixedHeader(table);
         });
+        function previewimg() {
+            const gambar = document.querySelector('#foto');
+            const gambarprev = document.querySelector('.gambarprev');
+            const filegambar = new FileReader();
+            filegambar.readAsDataURL(gambar.files[0]);
+
+            filegambar.onload = function (e) {
+                gambarprev.src = e.target.result;
+            }
+        }
     </script>
 @endsection

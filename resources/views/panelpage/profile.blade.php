@@ -53,7 +53,7 @@
             <center>
                 <div class="col-md-4">
                     <div class="card" style="width: 18rem;">
-                        <img src="{{ url('assets/img/user.png') }}" class="card-img-top img-prfl" alt="...">
+                        <img src="{{ asset('storage/'.auth()->user()->image) }}" class="card-img-top img-prfl" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">{{ $user->name }}<br>({{ '@'.$user->username }})</h5>
                             <a onclick="sosial('telegram', '{{ $user->telegram }}')">
@@ -85,7 +85,7 @@
                                         @csrf
                                         @method('put')
                                         <center>
-                                            <img src="{{ url('assets/img/user.png') }}" alt=""
+                                            <img src="{{ asset('storage/'.auth()->user()->image) }}" alt=""
                                                  class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
                                         </center>
                                         <div class="mb-3">
@@ -232,25 +232,6 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function () {
-            const image = '{{ $user->image }}';
-            if (image !== '') {
-                const url = '{{ url('/view-image?location=') }}' + image;
-                const imagecontent = $('.img-prfl');
-                const previmg = $('.gambarprev');
-                changeimage(url, imagecontent);
-                changeimage(url, previmg);
-            }
-        });
-
-        function changeimage(url, image) {
-            fetch(url)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    image.attr('src', url);
-                });
-        }
 
         function previewimg() {
             const image = document.querySelector('#gambar');

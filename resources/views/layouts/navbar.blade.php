@@ -45,37 +45,37 @@
                         Tenaga Kependidikan
                     </a>
                 </li>
-                <li>
-                    <a class="nav-link scrollto" href="{{ route('sarpras') }}">
-                        Sarana Prasarana
-                    </a>
-                </li>
+{{--                <li>--}}
+{{--                    <a class="nav-link scrollto" href="{{ route('sarpras') }}">--}}
+{{--                        Sarana Prasarana--}}
+{{--                    </a>--}}
+{{--                </li>--}}
             </ul>
         </li>
         <li><a class="nav-link scrollto" href="{{route('program-view')}}">Program</a></li>
-        <li class="dropdown">
-            <a href="#">
-                <span>Program</span> <i class="bi bi-chevron-down"></i>
-            </a>
-            @php
-                $getprg = \App\Models\program::join('jenis_program', 'jenis_program.id', '=', 'programs.jenis_program_id')
-                    ->select('programs.*','jenis_program.nama as jenis_program')
-                    ->get()
-                    ->groupBy('jenis_program');
-            @endphp
-            <ul>
-                @foreach($getprg as $key => $value)
-                    <li class="dropdown"><a href="#"><span>{{ $key }}</span> <i
-                                class="bi bi-chevron-right"></i></a>
-                        <ul>
-                            @foreach($value as $key2 => $prog)
-                                <li><a href="{{ url("/program-list/$prog->id") }}">{{ $prog->nama }}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
-                @endforeach
-            </ul>
-        </li>
+{{--        <li class="dropdown">--}}
+{{--            <a href="#">--}}
+{{--                <span>Program</span> <i class="bi bi-chevron-down"></i>--}}
+{{--            </a>--}}
+{{--            @php--}}
+{{--                $getprg = \App\Models\program::join('jenis_program', 'jenis_program.id', '=', 'programs.jenis_program_id')--}}
+{{--                    ->select('programs.*','jenis_program.nama as jenis_program')--}}
+{{--                    ->get()--}}
+{{--                    ->groupBy('jenis_program');--}}
+{{--            @endphp--}}
+{{--            <ul>--}}
+{{--                @foreach($getprg as $key => $value)--}}
+{{--                    <li class="dropdown"><a href="#"><span>{{ $key }}</span> <i--}}
+{{--                                class="bi bi-chevron-right"></i></a>--}}
+{{--                        <ul>--}}
+{{--                            @foreach($value as $key2 => $prog)--}}
+{{--                                <li><a href="{{ url("/program-list/$prog->id") }}">{{ $prog->nama }}</a></li>--}}
+{{--                            @endforeach--}}
+{{--                        </ul>--}}
+{{--                    </li>--}}
+{{--                @endforeach--}}
+{{--            </ul>--}}
+{{--        </li>--}}
         <li class="dropdown">
             <a href="#">
                 <span>Informasi</span> <i class="bi bi-chevron-down"></i>

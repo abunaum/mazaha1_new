@@ -52,23 +52,23 @@
     </ul>
 </li>
 
-<li class="nav-item">
-    <a class="nav-link @if(!isset($tab)) collapsed @elseif($tab !== 'Program') collapsed @endif" data-bs-target="#program-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>Data Program</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="program-nav" class="nav-content collapse @if(isset($tab)) @if($tab === 'Program') show @endif @endif" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="{{ route('jp')}}" @if($pages === 'Jenis Program') class="active" @endif>
-                <i class="bi bi-circle"></i><span>Jenis Program</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ route('program')}}" @if($pages === 'Semua Program') class="active" @endif>
-                <i class="bi bi-circle"></i><span>Semua Program</span>
-            </a>
-        </li>
-    </ul>
-</li>
+{{--<li class="nav-item">--}}
+{{--    <a class="nav-link @if(!isset($tab)) collapsed @elseif($tab !== 'Program') collapsed @endif" data-bs-target="#program-nav" data-bs-toggle="collapse" href="#">--}}
+{{--        <i class="bi bi-menu-button-wide"></i><span>Data Program</span><i class="bi bi-chevron-down ms-auto"></i>--}}
+{{--    </a>--}}
+{{--    <ul id="program-nav" class="nav-content collapse @if(isset($tab)) @if($tab === 'Program') show @endif @endif" data-bs-parent="#sidebar-nav">--}}
+{{--        <li>--}}
+{{--            <a href="{{ route('jp')}}" @if($pages === 'Jenis Program') class="active" @endif>--}}
+{{--                <i class="bi bi-circle"></i><span>Jenis Program</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
+{{--        <li>--}}
+{{--            <a href="{{ route('program')}}" @if($pages === 'Semua Program') class="active" @endif>--}}
+{{--                <i class="bi bi-circle"></i><span>Semua Program</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
+{{--    </ul>--}}
+{{--</li>--}}
 
 <!-- End Profile Page Nav -->
 
