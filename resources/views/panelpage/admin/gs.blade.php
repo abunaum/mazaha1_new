@@ -4,6 +4,7 @@
     <link href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css" rel="stylesheet"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -54,40 +55,19 @@
         <div class="row">
             <div class="col-lg-12">
                 <table id="sp" class="display table table-striped table-bordered nowrap mb-3" style="width:100%">
-                    <thead>
-                    <tr>
-                        <!--                    <th scope="col">#</th>-->
-                        <th scope="col">Nama</th>
-                        <th scope="col">Jabatan</th>
-                        <th scope="col">Bidang Studi</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">No HP</th>
-                        <th scope="col">Alamat</th>
-                        <th scope="col">Aksi</th>
-                    </tr>
-                    </thead>
+                    {{--                    <thead>--}}
+                    {{--                    <tr>--}}
+                    {{--                        <th scope="col">#</th>--}}
+                    {{--                        <th scope="col">Nama</th>--}}
+                    {{--                        <th scope="col">Jabatan</th>--}}
+                    {{--                        <th scope="col">Bidang Studi</th>--}}
+                    {{--                        <th scope="col">Email</th>--}}
+                    {{--                        <th scope="col">No HP</th>--}}
+                    {{--                        <th scope="col">Alamat</th>--}}
+                    {{--                        <th scope="col">Aksi</th>--}}
+                    {{--                    </tr>--}}
+                    {{--                    </thead>--}}
                     <tbody>
-                    @foreach($gs as $g)
-                        <tr>
-                            <td>{{ $g->name }}</td>
-                            <td>{{ $g->jabatan }}</td>
-                            <td @if($g->bidang_studi === '') style="text-align: center" @endif>{{ $g->bidang_studi === '' ? '-' : $g->bidang_studi }}</td>
-                            <td>{{ $g->email }}</td>
-                            <td>{{ $g->no_hp }}</td>
-                            <td>{{ $g->alamat }}</td>
-                            <td>
-                                @if(auth()->user()->id !== $g->uid)
-                                    <form id="form-hps-{{ $g->id }}" action="{{ route('gs-hapus', $g->uid) }}" method="post" class="d-inline">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="button" class="btn btn-sm btn-danger"  onclick="hapus('{{ $g->name }}','form-hps-{{ $g->id }}')">Hapus</button>
-                                    </form>
-                                @endif
-                                <a class="btn btn-sm btn-warning d-inline m-1"
-                                   href="{{ route('gs-edit', $g->uid)}}">Edit</a>
-                            </td>
-                        </tr>
-                    @endforeach
                     </tbody>
                 </table>
                 <center>
@@ -112,7 +92,8 @@
                             <div class="modal-body">
                                 <form class="row g-3" method="post" action="{{ route('restore-gs') }}"
                                       enctype="multipart/form-data">
-                                    <p style="color: #77181f">Restore akan menghapus guru dan staff yang ada dan akan menimpa dengan guru dan staff yang di upload!!!</p>
+                                    <p style="color: #77181f">Restore akan menghapus guru dan staff yang ada dan akan
+                                        menimpa dengan guru dan staff yang di upload!!!</p>
                                     @csrf
                                     <div class="mb-3">
                                         <label for="filejson" class="form-label">File Backup</label>
@@ -143,7 +124,8 @@
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="row g-3" action="{{ route('gs-tambah') }}" method="POST" enctype="multipart/form-data">
+                                <form class="row g-3" action="{{ route('gs-tambah') }}" method="POST"
+                                      enctype="multipart/form-data">
                                     @csrf
                                     <div class="col-md-12">
                                         <label for="nama" class="form-label">Nama</label>
@@ -222,8 +204,10 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="foto" class="form-label">Gambar</label>
-                                        <input class="form-control @error('foto') is-invalid @enderror mb-2" type="file" id="foto" name="foto" onchange="previewimg()">
-                                        <img src="{{ asset('assets/img/user.png') }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
+                                        <input class="form-control @error('foto') is-invalid @enderror mb-2" type="file"
+                                               id="foto" name="foto" onchange="previewimg()">
+                                        <img src="{{ asset('assets/img/user.png') }}" alt=""
+                                             class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
                                         @error('foto')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -253,12 +237,101 @@
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-            var table = $('#sp').DataTable({
-                responsive: true
+
+            const tb = $('#sp');
+            const tn = [
+                {
+                    text: '#',
+                    key: 'DT_RowIndex',
+                }
+            ];
+            const tableHead = [
+                {
+                    text: '#',
+                    key: 'DT_RowIndex',
+                },
+                {
+                    text: 'Nama',
+                    key: 'user.name',
+                },
+                {
+                    text: 'Jabatan',
+                    key: 'jabatan',
+                },
+                {
+                    text: 'Bidang Studi',
+                    key: 'bidang_studi',
+                },
+                {
+                    text: 'Email',
+                    key: 'user.email',
+                },
+                {
+                    text: 'No HP',
+                    key: 'no_hp',
+                },
+                {
+                    text: 'Alamat',
+                    key: 'alamat',
+                },
+                {
+                    text: 'Aksi',
+                    key: 'action',
+                }
+            ];
+
+            const thead = $('<thead>');
+            const tr = $('<tr>');
+
+            let clm = [];
+            tableHead.forEach(function (head) {
+                const th = $('<th>').attr('scope', 'col').text(head.text);
+                tr.append(th);
+                if (head.key === 'DT_RowIndex') {
+                    clm.push({data: head.key, name: head.key});
+                } else if (head.key === 'action') {
+                    clm.push({data: head.key, name: head.key, orderable: false, searchable: false});
+                } else {
+                    clm.push({
+                        data: head.key, name: head.key, render: function (data, type, row, meta) {
+                            return data ? data : "-";
+                        },
+                        orderable: true,
+                        searchable: true
+                    });
+                }
+            });
+
+            thead.append(tr);
+            tb.append(thead);
+
+            const table = tb.DataTable({
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json',
+                },
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'Tampilkan Semua'],
+                ],
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('api-gs') }}",
+                    "type": "POST",
+                    "headers": {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    "data": function (d) {
+                        d._token = $('meta[name="csrf-token"]').attr('content');
+                    }
+                },
+                columns: clm,
             });
             new $.fn.dataTable.FixedHeader(table);
         });
-        function hapus(nama, idform){
+
+        function hapus(nama, idform) {
             this.form = document.getElementById(idform);
             Swal.fire({
                 title: 'Apakah anda yakin?',
@@ -274,6 +347,7 @@
                 }
             })
         }
+
         function previewimg() {
             const gambar = document.querySelector('#foto');
             const gambarprev = document.querySelector('.gambarprev');

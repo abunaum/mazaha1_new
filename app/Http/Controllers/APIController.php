@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\agenda;
+use App\Models\gs;
 use App\Models\Post;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
@@ -126,7 +127,32 @@ class APIController extends Controller
         return response()->json($response);
     }
 
-    // ai function request to api openai
+    /**
+     * @throws \Exception
+     */
+    public function gs(): JsonResponse
+    {
+        $gs = gs::with('user')
+            ->get()
+            ->sortBy('user.name');
+        return DataTables::of($gs)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $actionBtn = '<a class="btn btn-sm btn-warning d-inline m-1" href="' . route('gs-edit', $row->uid) . '">Edit</a>';
+                $click = "hapus('". $row->user->name ."','form-hps-". $row->id ."')";
+                if (auth()->user()->id !== $row->uid) {
+                    $actionBtn .= '<form id="form-hps-' . $row->id . '" action="' . route('gs-hapus', $row->uid) . '" method="post" class="d-inline">
+                                <input type="hidden" name="_token" value="' . csrf_token() . '">
+                                <input type="hidden" name="_method" value="delete">
+                                <button type="button" class="btn btn-sm btn-danger"  onclick="' . $click . '">Hapus</button>
+                                </form>';
+                }
+                return $actionBtn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
     public function openai(Request $request): JsonResponse
     {
         $prompt = $request->input('prompt');
@@ -151,43 +177,5 @@ class APIController extends Controller
             ];
             return response()->json($res);
         }
-//
-//
-//
-//        $endpoint = 'https://api.openai.com/v1/engines/text-babbage-001/completions';
-//        $headers = [
-//            'Content-Type' => 'application/json',
-//            'Authorization' => 'Bearer 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',
-//        ];
-//
-//        $payload = [
-//            'prompt' => $prompt,
-//            'max_tokens' => 150,
-//            'temperature' => 1,
-//        ];
-//
-//        $client = new Client();
-//
-//        try {
-//
-//            $response = $client->post($endpoint, [
-//                'headers' => $headers,
-//                'json' => $payload,
-//            ]);
-//
-//            $data = json_decode($response->getBody(), true);
-//            $answer = $data['choices'][0]['text'];
-//            $res = [
-//                'message' => 'success',
-//                'jawaban' => $answer,
-//            ];
-//            return response()->json($res);
-//        } catch (\Exception $e) {
-//            $res = [
-//                'message' => 'error',
-//                'jawaban' => 'System : mohon maaf AI ngantuk karena lupa ngopi, sehingga lupa jawab ' . $e->getMessage(),
-//            ];
-//            return response()->json($res);
-//        }
     }
 }

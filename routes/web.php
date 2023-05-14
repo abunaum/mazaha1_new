@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('api')->group(function () {
     Route::prefix('api')->group(function () {
         Route::post('/blog', [APIController::class, 'blog'])->name('api-blog');
+        Route::post('/gs', [APIController::class, 'gs'])->name('api-gs');
         Route::get('/blog', [APIController::class, 'blog_front'])->name('api-blog-public');
         Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
     });
@@ -139,10 +140,11 @@ Route::middleware('api')->group(function () {
 
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
-    Route::get('/ai', [APIController::class, 'openai'])->name('ai');
-    Route::get('/test', function () {
-        return view('test');
-    });
+//    Route::get('/gs', [APIController::class, 'gs'])->name('api-public-gs');
+//    Route::get('/ai', [APIController::class, 'openai'])->name('ai');
+//    Route::get('/test', function () {
+//        return view('test');
+//    });
     Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
 });
 

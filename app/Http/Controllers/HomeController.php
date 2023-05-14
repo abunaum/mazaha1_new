@@ -205,19 +205,6 @@ class HomeController extends Controller
         return view('program', $data);
     }
 
-    public function program_list($id = 0): View|Factory|Application
-    {
-        $program = program::where('id', $id)->first();
-        if ($program) {
-            $data = [
-                'pages' => 'program',
-                'program' => $program,
-            ];
-            return view('program_list', $data);
-        } else {
-            return abort(404);
-        }
-    }
 
     public function struktur_organisasi(): Factory|View|Application
     {
