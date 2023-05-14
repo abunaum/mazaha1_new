@@ -41,31 +41,4 @@ class AdminController extends Controller
 //        dd($user);
         return view('panelpage.admin.gs-edit', $data);
     }
-
-    public function siswa(): View|Factory|Application
-    {
-        $data = [
-            'tab' => 'Data Person',
-            'pages' => 'Siswa',
-        ];
-        return view('panelpage.dashboard', $data);
-    }
-
-    public function kelas(): View|Factory|Application
-    {
-        $data = [
-            'tab' => 'Data KBM',
-            'pages' => 'Kelas',
-        ];
-        return view('panelpage.dashboard', $data);
-    }
-
-    public function mapel(): View|Factory|Application
-    {
-        $data = [
-            'tab' => 'Data KBM',
-            'pages' => 'Mapel',
-        ];
-        return view('panelpage.dashboard', $data);
-    }
 }
