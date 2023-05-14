@@ -3,11 +3,10 @@
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\JenisProgramController;
+use App\Http\Controllers\InspirasiAlumniController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostTableController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProgramController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
@@ -104,6 +103,19 @@ Route::middleware('auth')->group(function () {
                 Route::post('/restore', [PostTableController::class, 'restore'])->name('restore-post');
             });
         });
+        Route::get('/inspirasi-alumni/checkSlug', [InspirasiAlumniController::class, 'checkSlug']);
+        Route::get('/inspirasi-alumni/backup', [InspirasiAlumniController::class, 'backup'])->name('backup-inspirasi-alumni');
+        Route::post('/inspirasi-alumni/restore', [InspirasiAlumniController::class, 'restore'])->name('restore-inspirasi-alumni');
+        Route::resource('/inspirasi-alumni', InspirasiAlumniController::class, [
+            'names' => [
+                'index' => 'inspirasi-alumni',
+                'create' => 'inspirasi-alumni-tambah',
+                'store' => 'inspirasi-alumni-tambah-progress',
+                'edit' => 'inspirasi-alumni-edit',
+                'update' => 'inspirasi-alumni-edit-progress',
+                'destroy' => 'inspirasi-alumni-hapus',
+            ]
+        ])->except('show');
         Route::resource('/profile', ProfileController::class)->except('create', 'store', 'destroy', 'show','edit');
     });
 });

@@ -1,7 +1,7 @@
 <li class="nav-heading">Master Data</li>
 <li class="nav-item">
     <a class="nav-link @if(!isset($tab)) collapsed @elseif($tab !== 'Data Person') collapsed @endif" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>Data Person</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-person"></i><span>Data Person</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="components-nav" class="nav-content collapse @if(isset($tab)) @if($tab === 'Data Person') show @endif @endif" data-bs-parent="#sidebar-nav">
         <li>
@@ -13,7 +13,7 @@
 </li>
 <li class="nav-item">
     <a class="nav-link @if(!isset($tab)) collapsed @elseif($tab !== 'Agenda') collapsed @endif" data-bs-target="#agenda-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>Data Agenda</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-calendar"></i><span>Data Agenda</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="agenda-nav" class="nav-content collapse @if(isset($tab)) @if($tab === 'Agenda') show @endif @endif" data-bs-parent="#sidebar-nav">
         <li>

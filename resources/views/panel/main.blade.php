@@ -64,7 +64,7 @@
 
         <li class="nav-item">
             <a class="nav-link {{ $pages === 'Dashboard' ? '' : 'collapsed' }}" href="{{ $url_panel.'/dashboard' }}">
-                <i class="bi bi-grid"></i>
+                <i class="bi bi-mortarboard"></i>
                 <span>Dashboard</span>
             </a>
         </li>
@@ -77,7 +77,7 @@
         <li class="nav-heading">Setting</li>
         <li class="nav-item">
             <a class="nav-link {{ $pages === 'Profile' ? '' : 'collapsed' }}" href="{{ $url_panel.'/profile' }}">
-                <i class="bi bi-person"></i>
+                <i class="bi bi-person-bounding-box"></i>
                 <span>Profile</span>
             </a>
         </li>
