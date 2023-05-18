@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\agenda;
-use app\Traits\ImageTrait;
+use App\Traits\ImageTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -96,7 +96,7 @@ class AgendaController extends Controller
             $agenda['gambar'] = 'default-post.jpg';
         }
         agenda::create($agenda);
-        return back()->with('sukses', 'Agenda berhasil ditambahkan!');
+        return redirect()->route('agenda')->with('sukses', 'Agenda berhasil ditambahkan!');
     }
 
     /**
@@ -180,7 +180,7 @@ class AgendaController extends Controller
             }
         }
         agenda::where('id', $idagenda)->update($agenda);
-        return back()->with('sukses', 'Agenda berhasil di edit!');
+        return redirect()->route('agenda')->with('sukses', 'Agenda berhasil diedit!');
     }
 
     /**

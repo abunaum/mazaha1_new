@@ -87,7 +87,7 @@
                                 <form class="row g-3" method="post" action="{{ route('restore-post') }}"
                                       enctype="multipart/form-data">
                                     <p style="color: #77181f">Restore akan menghapus post yang ada dan akan menimpa
-                                        dengan post yang di upload!!!</p>
+                                        dengan inspirasi yang di upload!!!</p>
                                     @csrf
                                     <div class="mb-3">
                                         <label for="filejson" class="form-label">File Backup</label>
@@ -165,8 +165,8 @@
                         searchable: true
                     },
                     {
-                        data: 'author',
-                        name: 'author',
+                        data: 'user.name',
+                        name: 'user.name',
                         orderable: true,
                         searchable: true
                     },

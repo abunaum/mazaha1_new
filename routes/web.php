@@ -45,6 +45,10 @@ Route::prefix('/berita')->group(function () {
     Route::get('/', [HomeController::class, 'berita']);
     Route::get('/detail/{slug}', [HomeController::class, 'berita_detail'])->name('berita-detail');
 });
+Route::prefix('/inspirasi-alumni')->group(function () {
+    Route::get('/', [HomeController::class, 'inspirasi'])->name('inspirasi-alumni-view');
+    Route::get('/detail/{slug}', [HomeController::class, 'inspirasi_detail'])->name('inspirasi-detail');
+});
 
 
 Route::middleware('guest')->group(function () {
@@ -102,7 +106,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/backup', [PostTableController::class, 'backup'])->name('backup-post');
                 Route::post('/restore', [PostTableController::class, 'restore'])->name('restore-post');
             });
-            Route::get('/inspirasi-alumni/checkSlug', [InspirasiAlumniController::class, 'checkSlug']);
+            Route::get('/inspirasi-alumni/checkSlug', [InspirasiAlumniController::class, 'checkSlug'])->name('check-slug-inspirasi-alumni');
             Route::get('/inspirasi-alumni/backup', [InspirasiAlumniController::class, 'backup'])->name('backup-inspirasi-alumni');
             Route::post('/inspirasi-alumni/restore', [InspirasiAlumniController::class, 'restore'])->name('restore-inspirasi-alumni');
             Route::resource('/inspirasi-alumni', InspirasiAlumniController::class, [
@@ -127,13 +131,13 @@ Route::middleware('api')->group(function () {
         Route::post('/gs', [APIController::class, 'gs'])->name('api-gs');
         Route::get('/blog', [APIController::class, 'blog_front'])->name('api-blog-public');
         Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
+        Route::post('/inspirasi-alumni', [APIController::class, 'inspirasi_alumni'])->name('api-inspirasi-alumni');
     });
 });
 
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
-    Route::get('inspirasi-alumni', [APIController::class, 'inspirasi_alumni'])->name('api-inspirasi-alumni');
-    Route::post('inspirasi-alumni', [APIController::class, 'inspirasi_alumni'])->name('api-inspirasi-alumni');
+    Route::get('/inspirasi-alumni', [APIController::class, 'inspirasi_front'])->name('api-inspirasi-public');
 //    Route::get('/gs', [APIController::class, 'gs'])->name('api-public-gs');
 //    Route::get('/ai', [APIController::class, 'openai'])->name('ai');
 //    Route::get('/test', function () {

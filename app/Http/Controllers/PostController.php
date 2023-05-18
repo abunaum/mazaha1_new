@@ -6,7 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\categories;
 use App\Models\Post;
-use app\Traits\ImageTrait;
+use App\Traits\ImageTrait;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +84,7 @@ class PostController extends Controller
             $post['gambar'] = 'default-post.jpg';
         }
         Post::create($post);
-        return back()->with('sukses', 'Post berhasil ditambahkan!');
+        return redirect()->route('post')->with('sukses', 'Post berhasil ditambahkan!');
     }
 
     /**
@@ -175,7 +175,7 @@ class PostController extends Controller
             }
         }
         Post::where('id', $idpost)->update($post);
-        return back()->with('sukses', 'Post berhasil di edit!');
+        return redirect()->route('post')->with('sukses', 'Post berhasil diedit!');
     }
 
     /**

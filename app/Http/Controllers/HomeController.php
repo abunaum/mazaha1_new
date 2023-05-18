@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\gs;
+use App\Models\InspirasiAlumni;
 use App\Models\Post;
 use App\Models\program;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\ResponseFactory;
@@ -99,13 +101,13 @@ class HomeController extends Controller
         return view('tenaga-kependidikan', $data);
     }
 
-    public function ppdb(): Factory|View|Application
-    {
-        $data = [
-            'pages' => 'ppdb',
-        ];
-        return view('ppdb', $data);
-    }
+//    public function ppdb(): Factory|View|Application
+//    {
+//        $data = [
+//            'pages' => 'ppdb',
+//        ];
+//        return view('ppdb', $data);
+//    }
 
     public function berita(): Factory|View|Application
     {
@@ -131,6 +133,32 @@ class HomeController extends Controller
             'posts' => $posts,
         ];
         return view('berita-detail', $data);
+    }
+
+    public function inspirasi(): Factory|View|Application
+    {
+        $data = [
+            'pages' => 'inspirasi',
+            'paginate' => 7,
+        ];
+        return view('inspirasi', $data);
+    }
+
+    public function inspirasi_detail($slug): View|Factory|Application|RedirectResponse
+    {
+        $inspirasi = InspirasiAlumni::with('user')
+            ->where('slug', $slug)
+            ->first();
+        if (!$inspirasi) {
+            return redirect()->route('inspirasi-alumni-view');
+        }
+
+        $data = [
+            'pages' => 'inspirasi',
+            'posts' => $inspirasi,
+        ];
+
+        return view('inspirasi-detail', $data);
     }
 
     public function view_image(Request $request): Response|Application|ResponseFactory

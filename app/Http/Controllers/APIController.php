@@ -45,8 +45,13 @@ class APIController extends Controller
         return DataTables::of($inspirasi)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
+                $click = "hapus('" . $row->judul . "','form-hps-" . $row->id . "')";
                 $actionBtn = '<a class="btn btn-sm btn-warning d-inline m-1" href="' . route('inspirasi-alumni-edit', $row->id) . '">Edit</a>';
-                $actionBtn .= '<a class="btn btn-sm btn-danger d-inline m-1" href="' . route('inspirasi-alumni-hapus', $row->id) . '">Hapus</a>';
+                $actionBtn .= '<form id="form-hps-' . $row->id . '" action="' . route('inspirasi-alumni-hapus', $row->id) . '" method="post" class="d-inline">
+                                <input type="hidden" name="_token" value="' . csrf_token() . '">
+                                <input type="hidden" name="_method" value="delete">
+                                <button type="button" class="btn btn-sm btn-danger"  onclick="' . $click . '">Hapus</button>
+                                </form>';
                 return $actionBtn;
             })
             ->rawColumns(['action'])
@@ -141,6 +146,49 @@ class APIController extends Controller
         ];
 
         $response = array_merge($agendas->toArray(), $pagination);
+
+        return response()->json($response);
+    }
+
+    public function inspirasi_front(Request $request): JsonResponse
+    {
+        $inspirasi = InspirasiAlumni::latest()
+            ->with('user');
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $inspirasi->where(function ($q) use ($search) {
+                $q->Where('judul', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        if ($request->has('type') && !empty($request->type && $request->has('nama') && !empty($request->nama))) {
+            if ($request->type == 'author') {
+                $nama = $request->nama;
+                $inspirasi->where(function ($q) use ($nama) {
+                    $q->WhereHas('user', function ($q) use ($nama) {
+                        $q->where('name', 'like', '%' . $nama . '%');
+                    });
+                });
+            }
+        }
+
+
+        $posts = $inspirasi->latest()->paginate($request->paginate ?? 10);
+        $pagination = [
+            'pagination' => [
+                'total' => $posts->total(),
+                'per_page' => $posts->perPage(),
+                'current_page' => $posts->currentPage(),
+                'last_page' => $posts->lastPage(),
+                'from' => $posts->firstItem(),
+                'to' => $posts->lastItem(),
+            ],
+        ];
+
+        $response = array_merge($posts->toArray(), $pagination);
 
         return response()->json($response);
     }

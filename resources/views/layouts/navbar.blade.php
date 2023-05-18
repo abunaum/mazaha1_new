@@ -60,6 +60,7 @@
             <ul>
                 <li><a class="nav-link scrollto" href="{{ url('/berita') }}">Berita</a></li>
                 <li><a class="nav-link scrollto" href="{{ route('agenda-list') }}">Agenda</a></li>
+                <li><a class="nav-link scrollto" href="{{ route('inspirasi-alumni-view') }}">Inspirasi Alumni</a></li>
                 <li><a class="nav-link scrollto"
                        href="https://drive.google.com/drive/folders/1MM8y1__qJr4pGJxhXFDqRwdLafBIAM1S" target="_blank">Galeri</a>
                 </li>

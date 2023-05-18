@@ -50,13 +50,13 @@
     <section class="section dashboard">
         <div class="row">
             <div class="col-lg-8">
-                <form method="post" action="{{ route('post-update', $post->id)}}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('inspirasi-alumni-edit-progress', $inspirasi->id)}}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group mb-3">
                         <label for="judul">Judul</label>
                         <input type="text" class="form-control @error('judul') is-invalid @enderror" id="judul"
-                               name="judul" value="{{ $post->judul }}" autofocus>
+                               name="judul" value="{{ $inspirasi->judul }}" autofocus>
                         @error('judul')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -66,23 +66,8 @@
                     <div class="form-group mb-3">
                         <label for="slug">Slug</label>
                         <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug"
-                               name="slug" value="{{ $post->slug }}">
+                               name="slug" value="{{ $inspirasi->slug }}">
                         @error('slug')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="kategori">Kategori</label>
-                        <select class="form-control @error('kategori') is-invalid @enderror" id="kategori"
-                                name="kategori">
-                            <option value="{{ $post->categori }}">{{ $post->nama_kategori }}</option>
-                            @foreach($categories as $c)
-                                <option value="{{ $c->id }}">{{ $c->nama }}</option>
-                            @endforeach
-                        </select>
-                        @error('kategori')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -91,9 +76,9 @@
                     <div class="form-group mb-3">
                         <label for="body">Body</label>
                         <div class="quill-textarea">
-                            {!! old('body') ?? $post->body !!}
+                            {!! old('body') ?? $inspirasi->body !!}
                         </div>
-                        <textarea style="display: none" id="body" name="body">{{ old('body') ?? $post->body }}</textarea>
+                        <textarea style="display: none" id="body" name="body">{{ old('body') ?? $inspirasi->body }}</textarea>
                         @error('body')
                         <div style="color: red">
                             {{ $message }}
@@ -103,7 +88,7 @@
                     <div class="mb-3">
                         <label for="gambar" class="form-label">Gambar</label>
                         <input class="form-control @error('gambar') is-invalid @enderror mb-2" type="file" id="gambar" name="gambar" onchange="previewimg()">
-                        <img src="{{ url("storage/$post->gambar") }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
+                        <img src="{{ url("storage/$inspirasi->gambar") }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
                         @error('gambar')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -112,14 +97,14 @@
                     </div>
                     <div class="form-group mb-3">
                         <label for="time">Waktu</label>
-                        <input type="datetime-local" class="form-control @error('time') is-invalid @enderror" id="time" name="time" value="{{ old('created_at') ?? $post->created_at }}">
+                        <input type="datetime-local" class="form-control @error('time') is-invalid @enderror" id="time" name="time" value="{{ old('created_at') ?? $inspirasi->created_at }}">
                         @error('time')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary">Edit Post</button>
+                    <button type="submit" class="btn btn-primary">Edit Inspirasi</button>
                 </form>
             </div>
         </div>
@@ -132,7 +117,7 @@
         const slug = document.querySelector('#slug');
 
         judul.addEventListener('change', function () {
-            fetch('{{ $url_panel.'/post' }}/checkSlug?judul=' + judul.value)
+            fetch('{{ route('check-slug-inspirasi-alumni') }}?judul=' + judul.value)
                 .then(response => response.json())
                 .then(data => slug.value = data.slug)
         })

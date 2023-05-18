@@ -116,7 +116,7 @@
         const slug = document.querySelector('#slug');
 
         judul.addEventListener('change', function () {
-            fetch('{{ $url_panel.'/post' }}/checkSlug?judul=' + judul.value)
+            fetch('{{ route('check-slug-inspirasi-alumni') }}?judul=' + judul.value)
                 .then(response => response.json())
                 .then(data => slug.value = data.slug)
         })

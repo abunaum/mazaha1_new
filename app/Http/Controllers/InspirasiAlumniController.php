@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\InspirasiAlumni;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Traits\ValidationTrait;
@@ -86,7 +88,7 @@ class InspirasiAlumniController extends Controller
             $inspirasi['gambar'] = 'default-post.jpg';
         }
         InspirasiAlumni::create($inspirasi);
-        return back()->with('sukses', 'Inspirasi berhasil ditambahkan!');
+        return redirect()->route('inspirasi-alumni')->with('sukses', 'Inspirasi berhasil ditambahkan!');
     }
 
     /**
@@ -100,16 +102,30 @@ class InspirasiAlumniController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(InspirasiAlumni $inspirasiAlumni)
+    public function edit(Request $request, $id)
     {
-        //
+        $inspirasifull = InspirasiAlumni::with('user')
+            ->where('id', $id)
+            ->first();
+        if (!$inspirasifull) {
+            return back()->with('error', 'Inspirasi tidak ditemukan!');
+        }
+        $data = [
+            'tab' => 'Inspirasi',
+            'pages' => 'Inspirasi Alumni',
+            'inspirasi' => $inspirasifull,
+        ];
+        return view($this->pageview . 'edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, InspirasiAlumni $inspirasiAlumni)
+    public function update(Request $request, $id)
     {
+        $inspirasiAlumni = InspirasiAlumni::with('user')
+            ->where('id', $id)
+            ->first();
         if (!$inspirasiAlumni) {
             return back()->with('error', 'Inspirasi tidak ditemukan!');
         }
@@ -130,6 +146,7 @@ class InspirasiAlumniController extends Controller
         $validator = $this->validateData($request->all(), $valid);
 
         if ($validator->fails()) {
+            dd($validator->errors());
             return back()->with('error', 'Edit inspirasi gagal!')->withErrors($validator)->withInput();
         }
         $excerpt = str_replace("&nbsp;", " ", Str::limit(strip_tags($request->body), 350, '...'));
@@ -150,22 +167,31 @@ class InspirasiAlumniController extends Controller
             }
         }
         InspirasiAlumni::where('id', $idinspirasi)->update($inspirasiAlumni);
-        return back()->with('sukses', 'Inspirasi berhasil di edit!');
+        return redirect()->route('inspirasi-alumni')->with('sukses', 'Inspirasi berhasil di edit!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(InspirasiAlumni $inspirasiAlumni): RedirectResponse
+    public function destroy(Request $request, $id): RedirectResponse
     {
-        if (!$inspirasiAlumni) {
-            return back()->with('error', 'Post tidak ditemukan!');
+        $alumni = InspirasiAlumni::with('user')
+            ->where('id', $id)
+            ->first();
+        if (!$alumni) {
+            return back()->with('error', 'Inspirasi tidak ditemukan!');
         }
-        $image = $inspirasiAlumni->gambar;
+        $image = $alumni->gambar;
         if ($image != 'default-post.jpg') {
             Storage::delete($image);
         }
-        InspirasiAlumni::destroy($inspirasiAlumni->id);
-        return back()->with('sukses', 'Post berhasil dihapus!');
+        $alumni->delete();
+        return back()->with('sukses', 'Inspirasi berhasil dihapus!');
+    }
+
+    public function checkSlug(Request $request): JsonResponse
+    {
+        $slug = SlugService::createSlug(InspirasiAlumni::class, 'slug', $request->judul);
+        return response()->json(['slug' => $slug]);
     }
 }
