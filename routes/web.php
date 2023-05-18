@@ -132,12 +132,12 @@ Route::middleware('api')->group(function () {
         Route::get('/blog', [APIController::class, 'blog_front'])->name('api-blog-public');
         Route::get('/agenda', [APIController::class, 'agenda_front'])->name('api-agenda-public');
         Route::post('/inspirasi-alumni', [APIController::class, 'inspirasi_alumni'])->name('api-inspirasi-alumni');
+        Route::get('/inspirasi-alumni', [APIController::class, 'inspirasi_front'])->name('api-inspirasi-public');
     });
 });
 
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
-    Route::get('/inspirasi-alumni', [APIController::class, 'inspirasi_front'])->name('api-inspirasi-public');
 //    Route::get('/gs', [APIController::class, 'gs'])->name('api-public-gs');
 //    Route::get('/ai', [APIController::class, 'openai'])->name('ai');
 //    Route::get('/test', function () {
