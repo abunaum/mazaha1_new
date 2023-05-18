@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('uid')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('gid')->references('id')->on('gs')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('email')->nullable();
             $table->string('telegram')->nullable();
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();
+            $table->string('image')->default('gambar-gs/default.png');
             $table->timestamps();
         });
     }

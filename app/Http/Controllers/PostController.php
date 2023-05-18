@@ -6,12 +6,13 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\categories;
 use App\Models\Post;
+use app\Traits\ImageTrait;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use \Cviebrock\EloquentSluggable\Services\SlugService;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,7 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
+    use ImageTrait;
     public function index(): Application|Factory|View
     {
         $data = [
@@ -71,11 +73,11 @@ class PostController extends Controller
             'created_at' => $request->time,
         ];
 
-
         if ($request->file('gambar')) {
-            try {
-                $post['gambar'] = $request->file('gambar')->store('gambar-post');
-            } catch (\Throwable $th) {
+            $createimage = $this->imageCreate($request->file('gambar'), 'gambar-post');
+            if ($createimage) {
+                $post['gambar'] = $createimage;
+            } else {
                 return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Upload gambar');
             }
         } else {
@@ -165,20 +167,11 @@ class PostController extends Controller
 
 
         if ($request->file('gambar')) {
-            if ($gambarpost != 'default-post.jpg') {
-                try {
-                    Storage::delete($gambarpost);
-                    $post['gambar'] = $request->file('gambar')->store('gambar-post');
-                } catch (\Throwable $th) {
-                    return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Hapus Gambar Lama');
-                }
+            $cekgambar = $this->imageCheck('default-post.jpg', $request->file('gambar'), $gambarpost, 'default-post.jpg');
+            if ($cekgambar === false) {
+                return back()->with('error', 'Guru / Staff gagal diedit! <br> ' . 'Gagal Upload gambar');
             } else {
-                try {
-
-                    $post['gambar'] = $request->file('gambar')->store('gambar-post');
-                } catch (\Throwable $th) {
-                    return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Upload ke Gdrive');
-                }
+                $post['gambar'] = $cekgambar;
             }
         }
         Post::where('id', $idpost)->update($post);

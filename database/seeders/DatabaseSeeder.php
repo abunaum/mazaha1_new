@@ -4,12 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\categories;
-use App\Models\jenis_program;
-use App\Models\Profile;
-use App\Models\program;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\gs;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,21 +21,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('yaniardath!@#'),
         ]);
 
-        Profile::create([
-            'uid' => 1,
-            'telegram' => null,
-            'instagram' => null,
-            'facebook' => null,
-        ]);
-
-        gs::create([
-            'uid' => 1,
-            'alamat' => 'Satreyan Maron',
-            'jabatan' => 'Web Dev',
-            'no_hp' => '081234567890',
-            'bidang_studi' => '',
-        ]);
-
         User::create([
             'name' => 'Najwan Nada',
             'username' => 'nada',
@@ -47,13 +28,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'media',
             'is_active' => true,
             'password' => bcrypt('nada123'),
-        ]);
-
-        Profile::create([
-            'uid' => 2,
-            'telegram' => null,
-            'instagram' => null,
-            'facebook' => null,
         ]);
 
         User::create([
@@ -65,13 +39,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('admin2123'),
         ]);
 
-        Profile::create([
-            'uid' => 3,
-            'telegram' => null,
-            'instagram' => null,
-            'facebook' => null,
-        ]);
-
         User::create([
             'name' => 'Muhammad Hendra',
             'username' => 'mhd',
@@ -81,13 +48,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('mhd123'),
         ]);
 
-        Profile::create([
-            'uid' => 4,
-            'telegram' => null,
-            'instagram' => null,
-            'facebook' => null,
-        ]);
-
         User::create([
             'name' => 'Rio Bahtiar',
             'username' => 'bahtiar',
@@ -95,13 +55,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'media',
             'is_active' => true,
             'password' => bcrypt('bahtiar123'),
-        ]);
-
-        Profile::create([
-            'uid' => 5,
-            'telegram' => null,
-            'instagram' => null,
-            'facebook' => null,
         ]);
 
         categories::create([

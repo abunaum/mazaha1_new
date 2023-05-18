@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('inspirasi_alumnis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('author')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('judul');
+            $table->string('slug');
+            $table->text('excerpt');
+            $table->longText('body');
+            $table->string('gambar');
             $table->timestamps();
         });
     }

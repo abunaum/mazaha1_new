@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('gs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('uid')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('alamat');
-            $table->string('jabatan');
-            $table->string('bidang_studi');
-            $table->string('no_hp');
+            $table->string('nama');
+            $table->string('alamat')->nullable();
+            $table->string('jabatan')->nullable();
+            $table->string('bidang_studi')->nullable();
+            $table->string('no_hp')->nullable();
             $table->timestamps();
         });
     }

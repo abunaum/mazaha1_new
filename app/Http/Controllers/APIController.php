@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\agenda;
 use App\Models\gs;
+use App\Models\InspirasiAlumni;
 use App\Models\Post;
+use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,6 +35,22 @@ class APIController extends Controller
             'created_at' => $posts['created_at']
         ];
         return response($postnya, 200);
+    }
+
+    public function inspirasi_alumni(): JsonResponse
+    {
+        $inspirasi = InspirasiAlumni::latest()
+            ->with('user')
+            ->get();
+        return DataTables::of($inspirasi)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $actionBtn = '<a class="btn btn-sm btn-warning d-inline m-1" href="' . route('inspirasi-alumni-edit', $row->id) . '">Edit</a>';
+                $actionBtn .= '<a class="btn btn-sm btn-danger d-inline m-1" href="' . route('inspirasi-alumni-hapus', $row->id) . '">Hapus</a>';
+                return $actionBtn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function blog(): JsonResponse
@@ -128,25 +146,23 @@ class APIController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function gs(): JsonResponse
     {
-        $gs = gs::with('user')
+        $gs = gs::with('profile')
             ->get()
-            ->sortBy('user.name');
+            ->sortBy('nama');
         return DataTables::of($gs)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a class="btn btn-sm btn-warning d-inline m-1" href="' . route('gs-edit', $row->uid) . '">Edit</a>';
-                $click = "hapus('". $row->user->name ."','form-hps-". $row->id ."')";
-                if (auth()->user()->id !== $row->uid) {
-                    $actionBtn .= '<form id="form-hps-' . $row->id . '" action="' . route('gs-hapus', $row->uid) . '" method="post" class="d-inline">
+                $actionBtn = '<a class="btn btn-sm btn-warning d-inline m-1" href="' . route('gs-edit', $row->id) . '">Edit</a>';
+                $click = "hapus('" . $row->nama . "','form-hps-" . $row->id . "')";
+                $actionBtn .= '<form id="form-hps-' . $row->id . '" action="' . route('gs-hapus', $row->id) . '" method="post" class="d-inline">
                                 <input type="hidden" name="_token" value="' . csrf_token() . '">
                                 <input type="hidden" name="_method" value="delete">
                                 <button type="button" class="btn btn-sm btn-danger"  onclick="' . $click . '">Hapus</button>
                                 </form>';
-                }
                 return $actionBtn;
             })
             ->rawColumns(['action'])
@@ -170,7 +186,7 @@ class APIController extends Controller
                 'result' => $result->id
             ];
             return response()->json($res);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $res = [
                 'message' => 'error',
                 'jawaban' => 'System : mohon maaf AI ngantuk karena lupa ngopi, sehingga lupa jawab ' . $e->getMessage(),

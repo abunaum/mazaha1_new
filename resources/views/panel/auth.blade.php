@@ -29,6 +29,7 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/panel/css/style.css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_V3_SITE_KEY') }}"></script>
 </head>
 
 <body>
@@ -74,6 +75,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/panel/js/main.js"></script>
+
 
 </body>
 

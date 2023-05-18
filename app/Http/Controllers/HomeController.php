@@ -43,9 +43,25 @@ class HomeController extends Controller
 
     public function tenaga_pendidik(): Factory|View|Application
     {
-        $gs = gs::cari(request(['cari']))
-            ->where('jabatan', 'LIKE', 'GURU')
-            ->orWhere('jabatan', 'LIKE', 'KEPALA MADRASAH')
+        if (request('cari')){
+            $gs = gs::with('profile')
+                ->where(function ($query){
+                    $query->where('jabatan', 'LIKE', '%GURU%')
+                        ->orWhere('jabatan', 'LIKE', 'KEPALA MADRASAH');
+                })
+                ->where(function ($query){
+                    $query->where('nama', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('jabatan', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('bidang_studi', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('alamat', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('no_hp', 'LIKE', '%'.request('cari').'%');
+                });
+        } else {
+            $gs = gs::with('profile')
+                ->where('jabatan', 'LIKE', '%GURU%')
+                ->orWhere('jabatan', 'LIKE', 'KEPALA MADRASAH');
+        }
+        $gs = $gs->OrderBy('nama', 'ASC')
             ->paginate(10)
             ->withQueryString();
         $data = [
@@ -57,8 +73,23 @@ class HomeController extends Controller
 
     public function tenaga_kependidikan(): Factory|View|Application
     {
-        $gs = gs::cari(request(['cari']))
-            ->where('jabatan', '!=', 'GURU')
+        if (request('cari')){
+            $gs = gs::with('profile')
+                ->where(function ($query){
+                    $query->where('jabatan', '!=', 'GURU');
+                })
+                ->where(function ($query){
+                    $query->where('nama', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('jabatan', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('bidang_studi', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('alamat', 'LIKE', '%'.request('cari').'%')
+                        ->orWhere('no_hp', 'LIKE', '%'.request('cari').'%');
+                });
+        } else {
+            $gs = gs::with('profile')
+                ->where('jabatan', '!=', 'GURU');
+        }
+        $gs = $gs->SortBy('nama')
             ->paginate(10)
             ->withQueryString();
         $data = [

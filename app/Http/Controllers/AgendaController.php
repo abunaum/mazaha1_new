@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\agenda;
+use app\Traits\ImageTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AgendaController extends Controller
 {
+
+    use ImageTrait;
     private string $pageview;
 
     public function __construct()
@@ -83,10 +86,11 @@ class AgendaController extends Controller
 
 
         if ($request->file('gambar')) {
-            try {
-                $agenda['gambar'] = $request->file('gambar')->store('gambar-agenda');
-            } catch (\Throwable $th) {
-                return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Upload ke gambar');
+            $createimage = $this->imageCreate($request->file('gambar'), 'gambar-agenda');
+            if ($createimage) {
+                $agenda['gambar'] = $createimage;
+            } else {
+                return back()->with('error', 'Post gagal ditambahkan! <br> '.'Gagal Upload gambar');
             }
         } else {
             $agenda['gambar'] = 'default-post.jpg';
@@ -168,19 +172,11 @@ class AgendaController extends Controller
         ];
 
         if ($request->file('gambar')) {
-            if ($gambaragenda != 'default-post.jpg') {
-                try {
-                    Storage::delete($gambaragenda);
-                    $agenda['gambar'] = $request->file('gambar')->store('gambar-agenda');
-                } catch (\Throwable $th) {
-                    return back()->with('error', 'Agenda gagal diedit! <br> '.'Gagal Hapus Gambar Lama');
-                }
+            $cekgambar = $this->imageCheck('default-post.jpg', $request->file('gambar'), $gambaragenda, 'gambar-agenda');
+            if ($cekgambar === false) {
+                return back()->with('error', 'Agenda gagal diedit! <br> '.'Gagal Upload Gambar');
             } else {
-                try {
-                    $agenda['gambar'] = $request->file('gambar')->store('gambar-agenda');
-                } catch (\Throwable $th) {
-                    return back()->with('error', 'Agenda gagal diedit! <br> '.'Gagal Upload ke Gambar');
-                }
+                $agenda['gambar'] = $cekgambar;
             }
         }
         agenda::where('id', $idagenda)->update($agenda);

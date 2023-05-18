@@ -50,22 +50,22 @@
                         <div class="col-lg-6 mb-3">
                             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
                                 <div class="pic">
-                                    <img
-                                        src="{{ $sp->gambar !== 'user.png' ? asset('storage/'.$sp->gambar) : asset('assets/img/user.png') }}"
-                                        class="img-fluid img-id-{{ $sp->id }}" alt="">
+                                    <img src="{{ asset('storage/'.$sp->profile->image) }}"
+                                         class="img-fluid img-id-{{ $sp->id }}" alt="">
                                 </div>
                                 <div class="member-info">
-                                    <h4>{{ $sp->name }}</h4>
-                                    <span>Jabatan : {{ $sp->jabatan }}</span>
+                                    <h4>{{ $sp->nama }}</h4>
+                                    <p>Jabatan : {{ $sp->jabatan }}</p>
+                                    <span>Bidang Studi : {{ $sp->bidang_studi === '' ? '-' : $sp->bidang_studi }}</span>
                                     <p>No HP : {{ $sp->no_hp }}</p>
                                     <div class="social">
-                                        <a onclick="sosial('telegram', '{{ $sp->telegram }}')">
+                                        <a onclick="sosial('telegram', '{{ $sp->profile->telegram }}')">
                                             <i class="ri-telegram-fill"></i>
                                         </a>
-                                        <a onclick="sosial('facebook', '{{ $sp->facebook }}')">
+                                        <a onclick="sosial('facebook', '{{ $sp->profile->facebook }}')">
                                             <i class="ri-facebook-fill"></i>
                                         </a>
-                                        <a onclick="sosial('instagram', '{{ $sp->instagram }}')">
+                                        <a onclick="sosial('instagram', '{{ $sp->profile->instagram }}')">
                                             <i class="ri-instagram-fill"></i>
                                         </a>
                                     </div>

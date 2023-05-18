@@ -11,26 +11,9 @@ class gs extends Model
 
     protected $guarded = ['id'];
 
-    public function scopeCari($query, array $filter)
+    public function profile()
     {
-        $query->join('users', 'users.id', '=', 'gs.uid')
-            ->join('profiles', 'profiles.uid', '=', 'gs.uid')
-            ->select('users.*', 'users.image as gambar', 'gs.*', 'profiles.*')
-            ->orderBy('users.name', 'asc');
-
-        $query->when($filter['cari'] ?? null, function ($query, $cari) {
-            $query->where('users.name', 'like', '%'.$cari.'%')
-                ->orWhere('gs.jabatan', 'like', '%'.$cari.'%')
-                ->orWhere('gs.bidang_studi', 'like', '%'.$cari.'%')
-                ->orWhere('gs.no_hp', 'like', '%'.$cari.'%');
-        });
-
-        return $query;
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'uid', 'id');
+        return $this->hasOne(Profile::class, 'gid', 'id');
     }
 
 }

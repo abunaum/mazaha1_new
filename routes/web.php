@@ -60,9 +60,9 @@ Route::middleware('auth')->group(function () {
             Route::prefix('/admin')->group(function () {
                 Route::prefix('/guru-staff')->group(function () {
                     Route::get('/', [AdminController::class, 'guru_staff'])->name('guru-staff');
-                    Route::get('/edit/{uid}', [AdminController::class, 'edit_gs'])->name('gs-edit');
-                    Route::put('/edit/{uid}', [AdminFunction::class, 'edit_gs'])->name('gs-edit-progress');
-                    Route::delete('/hapus/{uid}', [AdminFunction::class, 'hapus_gs'])->name('gs-hapus');
+                    Route::get('/edit/{id}', [AdminController::class, 'edit_gs'])->name('gs-edit');
+                    Route::put('/edit/{id}', [AdminFunction::class, 'edit_gs'])->name('gs-edit-progress');
+                    Route::delete('/hapus/{id}', [AdminFunction::class, 'hapus_gs'])->name('gs-hapus');
                     Route::post('/tambah', [AdminFunction::class, 'tambah_gs'])->name('gs-tambah');
                 });
                 Route::prefix('/gstb')->group(function () {
@@ -102,20 +102,20 @@ Route::middleware('auth')->group(function () {
                 Route::get('/backup', [PostTableController::class, 'backup'])->name('backup-post');
                 Route::post('/restore', [PostTableController::class, 'restore'])->name('restore-post');
             });
+            Route::get('/inspirasi-alumni/checkSlug', [InspirasiAlumniController::class, 'checkSlug']);
+            Route::get('/inspirasi-alumni/backup', [InspirasiAlumniController::class, 'backup'])->name('backup-inspirasi-alumni');
+            Route::post('/inspirasi-alumni/restore', [InspirasiAlumniController::class, 'restore'])->name('restore-inspirasi-alumni');
+            Route::resource('/inspirasi-alumni', InspirasiAlumniController::class, [
+                'names' => [
+                    'index' => 'inspirasi-alumni',
+                    'create' => 'inspirasi-alumni-tambah',
+                    'store' => 'inspirasi-alumni-tambah-progress',
+                    'edit' => 'inspirasi-alumni-edit',
+                    'update' => 'inspirasi-alumni-edit-progress',
+                    'destroy' => 'inspirasi-alumni-hapus',
+                ]
+            ])->except('show');
         });
-        Route::get('/inspirasi-alumni/checkSlug', [InspirasiAlumniController::class, 'checkSlug']);
-        Route::get('/inspirasi-alumni/backup', [InspirasiAlumniController::class, 'backup'])->name('backup-inspirasi-alumni');
-        Route::post('/inspirasi-alumni/restore', [InspirasiAlumniController::class, 'restore'])->name('restore-inspirasi-alumni');
-        Route::resource('/inspirasi-alumni', InspirasiAlumniController::class, [
-            'names' => [
-                'index' => 'inspirasi-alumni',
-                'create' => 'inspirasi-alumni-tambah',
-                'store' => 'inspirasi-alumni-tambah-progress',
-                'edit' => 'inspirasi-alumni-edit',
-                'update' => 'inspirasi-alumni-edit-progress',
-                'destroy' => 'inspirasi-alumni-hapus',
-            ]
-        ])->except('show');
         Route::resource('/profile', ProfileController::class)->except('create', 'store', 'destroy', 'show','edit');
     });
 });
@@ -132,6 +132,8 @@ Route::middleware('api')->group(function () {
 
 Route::prefix('public-api')->group(function () {
     Route::get('/latest-blog', [APIController::class, 'get_post']);
+    Route::get('inspirasi-alumni', [APIController::class, 'inspirasi_alumni'])->name('api-inspirasi-alumni');
+    Route::post('inspirasi-alumni', [APIController::class, 'inspirasi_alumni'])->name('api-inspirasi-alumni');
 //    Route::get('/gs', [APIController::class, 'gs'])->name('api-public-gs');
 //    Route::get('/ai', [APIController::class, 'openai'])->name('ai');
 //    Route::get('/test', function () {

@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\gs;
 use App\Models\Profile;
-use App\Models\User;
+use App\Traits\ImageTrait;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
@@ -16,16 +17,18 @@ use Illuminate\Http\Response;
 
 class AdminFunction extends Controller
 {
+    use ImageTrait;
+
     public function tambah_gs(Request $request)
     {
         $rules = [
             'nama' => 'required',
             'jabatan' => 'required',
-            'email' => 'required|email:rfc,dns|unique:users,email',
-            'username' => 'required|unique:users,username',
-            'password' => 'required',
-            'role' => 'required',
         ];
+
+        if ($request->email !== null) {
+            $rules['email'] = 'required|email:rfc,dns|unique:profiles,email';
+        }
         if ($request->file('foto')) {
             $rules['foto'] = 'image|file|max:2048|mimes:jpeg,png,jpg,gif,svg';
         }
@@ -34,55 +37,53 @@ class AdminFunction extends Controller
         if ($validator->fails()) {
             return back()->with('error', 'Tambah data gagal!')->withErrors($validator)->withInput();
         }
-        $user = [
-            'name' => $request->nama,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
-            'is_active' => 1,
-        ];
-        if ($request->file('foto')) {
-            try {
 
-                $user['image'] = $request->file('foto')->store('gambar-user');
-            } catch (\Throwable $th) {
-                return back()->with('error', 'Guru / Staff gagal di tambah! <br> ' . 'Gagal Upload foto');
-            }
-        }
-        $user = User::create($user);
         $gs = [
-            'uid' => $user->id,
+            'nama' => $request->nama,
             'alamat' => $request->alamat,
             'jabatan' => $request->jabatan,
             'bidang_studi' => $request->bidang_studi,
             'no_hp' => $request->nohp,
         ];
-        gs::create($gs);
+        $creategs = gs::create($gs);
+        $gid = $creategs->id;
+        $profile = [
+            'gid' => $gid,
+            'email' => $request->email,
+            'telegram' => $request->telegram,
+            'facebook' => $request->facebook,
+            'instagram' => $request->instagram,
+        ];
+        if ($request->file('foto')) {
+            $createimage = $this->imageCreate($request->file('foto'), 'gambar-gs');
+            if ($createimage) {
+                $profile['image'] = $createimage;
+            } else {
+                return back()->with('error', 'Guru / Staff gagal di tambah! <br> ' . 'Gagal Upload foto');
+            }
+        } else {
+            $profile['image'] = 'gambar-gs/default.png';
+        }
+        Profile::create($profile);
+
         return back()->with('sukses', 'Tambah data berhasil!');
     }
 
-    public function edit_gs(Request $request, User $uid)
+    public function edit_gs(Request $request, $id)
     {
-        $gsperson = gs::where('uid', $uid->id)->first();
-        $idgs = $gsperson->id;
+        $person = gs::with('profile')
+            ->where('id', $id)
+            ->first();
 
         $rules = [
             'nama' => 'required',
             'jabatan' => 'required',
-            'role' => 'required',
         ];
 
-        if ($uid->email == $request->email) {
+        if ($person->profile->email == $request->email) {
             $rules['email'] = 'required|email:rfc,dns';
         } else {
-            $rules['email'] = 'required|email:rfc,dns|unique:users,email';
-        }
-
-        if ($uid->username == $request->username) {
-            $rules['username'] = 'required';
-        } else {
-            $rules['username'] = 'required|unique:users,username';
+            $rules['email'] = 'required|email:rfc,dns|unique:profiles,email';
         }
 
         if ($request->file('foto')) {
@@ -92,71 +93,57 @@ class AdminFunction extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return back()->with('error', 'Tambah data gagal!')->withErrors($validator)->withInput();
+            return back()->with('error', 'Edit data gagal!')->withErrors($validator)->withInput();
         }
 
-        $user = [
-            'name' => $request->nama,
-            'username' => $request->username,
-            'email' => $request->email,
-            'role' => $request->role,
-        ];
         $gs = [
+            'nama' => $request->nama,
             'alamat' => $request->alamat,
             'jabatan' => $request->jabatan,
             'bidang_studi' => $request->bidang_studi,
             'no_hp' => $request->nohp,
         ];
-        $fotoori = $uid->image;
-        if ($request->file('foto')) {
-            if ($fotoori != 'user.png') {
-                try {
-                    Storage::delete($fotoori);
-                    $user['image'] = $request->file('foto')->store('gambar-user');
-                } catch (\Throwable $th) {
-                    return back()->with('error', 'Guru / Staff gagal diedit! <br> ' . 'Gagal Hapus Foto Lama');
-                }
-            } else {
-                try {
+        gs::where('id', $id)->update($gs);
+        $profile = [
+            'email' => $request->email,
+            'telegram' => $request->telegram,
+            'facebook' => $request->facebook,
+            'instagram' => $request->instagram,
+        ];
+        $fotoori = $person->profile->image;
 
-                    $user['image'] = $request->file('foto')->store('gambar-user');
-                } catch (\Throwable $th) {
-                    return back()->with('error', 'Guru / Staff gagal diedit! <br> ' . 'Gagal Upload foto');
-                }
+        if ($request->file('foto')) {
+            $cekgambar = $this->imageCheck('gambar-gs/default.png', $request->file('foto'), $fotoori, 'gambar-gs');
+            if ($cekgambar === false) {
+                return back()->with('error', 'Guru / Staff gagal diedit! <br> ' . 'Gagal Upload gambar');
+            } else {
+                $profile['image'] = $cekgambar;
             }
         }
 
-        User::where('id', $uid->id)->update($user);
-        gs::where('id', $idgs)->update($gs);
+        profile::where('id', $person->profile->id)->update($profile);
         return back()->with('sukses', 'Edit data berhasil!');
     }
 
-    public function hapus_gs(User $uid): RedirectResponse
+    public function hapus_gs(Request $request, $id): RedirectResponse
     {
-        $gsperson = gs::where('uid', $uid->id)->first();
-        $idgs = $gsperson->id;
-        gs::where('id', $idgs)->delete();
-        $uid->delete();
+        $gs = gs::with('profile')
+            ->where('id', $id)
+            ->first();
+        Storage::delete($gs->profile->image);
+        $gs->delete();
         return back()->with('sukses', 'Hapus data berhasil!');
     }
 
     public function backup_gs(): Response|Application|ResponseFactory
     {
-        $gs = gs::join('users', 'users.id', '=', 'gs.uid')
-            ->join('profiles', 'profiles.uid', '=', 'gs.uid')
-            ->select('users.*', 'users.image as gambar', 'gs.*', 'profiles.*')
+        $gs = gs::with('profile')
             ->get();
-        $gsnya = [];
-        foreach ($gs as $g) {
-            if ($g['role'] == 'guru') {
-                array_push($gsnya, $g);
-            }
-        }
-        $fixgs = ['datags' => $gsnya];
+        $fixgs = ['datags' => $gs];
         $jsongs = json_encode($fixgs);
         $jsongs = Crypt::encrypt($jsongs);
         return response($jsongs, 200, [
-            'Content-Disposition' => 'attachment; filename="gs-' . time() . '.mazaha"'
+            'Content-Disposition' => 'attachment; filename="guru&staff-' . time() . '.mazaha"'
         ]);
     }
 
@@ -180,47 +167,30 @@ class AdminFunction extends Controller
         $arrdata = json_decode($data, true);
 
         $getdata = $arrdata['datags'] ?? null;
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('profiles')->truncate();
+        DB::table('gs')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         if ($getdata) {
-            $gs = gs::join('users', 'users.id', '=', 'gs.uid')
-                ->join('profiles', 'profiles.uid', '=', 'gs.uid')
-                ->select('users.*', 'gs.*', 'profiles.*')
-                ->where('users.role', 'guru')
-                ->get();
-            if ($gs) {
-                foreach ($gs as $g) {
-                    User::destroy($g->uid);
-                }
-            }
             foreach ($getdata as $dp) {
                 try {
-                    $datauser = [
-                        'name' => $dp['name'],
-                        'username' => $dp['username'],
-                        'email' => $dp['email'],
-                        'password' => $dp['password'],
-                        'role' => 'guru',
-                        'is_active' => 1,
-                        'image' => $dp['gambar']
-                    ];
-                    $user = User::create($datauser);
                     $datags = [
-                        'uid' => $user->id,
+                        'nama' => $dp['nama'],
                         'alamat' => $dp['alamat'],
                         'jabatan' => $dp['jabatan'],
                         'bidang_studi' => $dp['bidang_studi'],
                         'no_hp' => $dp['no_hp'],
                     ];
+                    $creategs = gs::create($datags);
                     $profile = [
-                        'uid' => $user->id,
-                        'image' => null,
+                        'gid' => $creategs->id,
+                        'email' => null,
                         'telegram' => null,
                         'instagram' => null,
                         'facebook' => null,
                     ];
-                    gs::create($datags);
                     Profile::create($profile);
                 } catch (\Exception $e) {
-                    dd($e->getMessage());
                     return back()->with('error', 'Restore Guru dan Staff gagal! <br> File backup corrupt');
                 }
             }

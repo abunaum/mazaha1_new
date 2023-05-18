@@ -54,15 +54,15 @@
         <div class="row">
             <div class="col-lg-12">
                 <center>
-                    <h1>Edit ({{ $gs->name }})</h1>
+                    <h1>Edit ({{ $gs->nama }})</h1>
                 </center>
-                <form class="row g-3" action="{{ route('gs-edit-progress', $gs->uid) }}" method="POST" enctype="multipart/form-data">
+                <form class="row g-3" action="{{ route('gs-edit-progress', $gs->id) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="col-md-12">
                         <label for="nama" class="form-label">Nama</label>
                         <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                               id="nama" name="nama" placeholder="Nama" value="{{ old('nama', $gs->name) }}">
+                               id="nama" name="nama" placeholder="Nama" value="{{ old('nama', $gs->nama) }}">
                         @error('nama')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -82,32 +82,12 @@
                     <div class="col-md-4">
                         <label for="bidang_studi" class="form-label">Bidang Studi</label>
                         <input type="text" class="form-control" id="bidang_studi" name="bidang_studi"
-                               placeholder="Bidang Studi" value="{{ old('bidang_studi',$gs->bidang_studi !== "" ? $gs->bidang_studi : "-") }}">
+                               placeholder="Bidang Studi" value="{{ old('bidang_studi',$gs->bidang_studi) }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="role" class="form-label">Role</label>
-                        <select id="role" class="form-select" name="role" id="role">
-                            <option value="{{ $gs->role }}">{{ ucfirst($gs->role) }}</option>
-                            <option value="admin">Admin</option>
-                            <option value="guru">Guru</option>
-                            <option value="siswa">Siswa</option>
-                            <option value="user">User</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control @error('username') is-invalid @enderror"
-                               id="username" name="username" value="{{ old('username', $gs->username) }}">
-                        @error('username')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror"
-                               id="email" name="email" value="{{ old('email',$gs->email) }}">
+                               id="email" name="email" value="{{ old('email',$gs->profile->email) }}">
                         @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -124,10 +104,22 @@
                         <input type="text" class="form-control" id="nohp" name="nohp"
                                placeholder="08xxxxxxxxx" value="{{ old('nohp',$gs->no_hp) }}">
                     </div>
+                    <div class="col-md-4">
+                        <label for="telegram" class="form-label">Username Telegram</label>
+                        <input type="text" class="form-control"id="telegram" name="telegram" value="{{ old('telegram',$gs->profile->telegram) }}" placeholder="Username Telegram">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="instagram" class="form-label">Username Instagram</label>
+                        <input type="text" class="form-control" id="instagram" name="instagram" value="{{ old('instagram',$gs->profile->instagram) }}" placeholder="Username Instagram">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="facebook" class="form-label">Username Facebook</label>
+                        <input type="text" class="form-control" id="facebook" name="facebook" value="{{ old('facebook',$gs->profile->facebook) }}" placeholder="Username Facebook">
+                    </div>
                     <div class="mb-3">
                         <label for="foto" class="form-label">Gambar</label>
                         <input class="form-control @error('foto') is-invalid @enderror mb-2" type="file" id="foto" name="foto" onchange="previewimg()">
-                        <img src="{{ $gs->image !== 'user.png' ? asset('storage/'.$gs->image) : asset('assets/img/user.png') }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
+                        <img src="{{ asset('storage/'.$gs->profile->image) }}" alt="" class="gambarprev img-thumbnail mb-3" style="max-width: 200px">
                         @error('foto')
                         <div class="invalid-feedback">
                             {{ $message }}

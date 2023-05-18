@@ -21,15 +21,18 @@ class AuthController extends Controller
 
     public function authenticate(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => ['required'],
             'password' => ['required'],
         ]);
 
+        $credentials = $request->only('username', 'password');
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended( config('setting.url_panel').'/dashboard');
+            return redirect()->intended(config('setting.url_panel').'/dashboard');
         }
+
         return back()->with('error', 'Login gagal!');
     }
 

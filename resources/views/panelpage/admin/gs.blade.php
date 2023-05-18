@@ -153,40 +153,10 @@
                                                placeholder="Bidang Studi">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="role" class="form-label">Role</label>
-                                        <select id="role" class="form-select" name="role" id="role">
-                                            <option value="admin">Admin</option>
-                                            <option value="guru">Guru</option>
-                                            <option value="siswa">Siswa</option>
-                                            <option value="user">User</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                               id="username" name="username">
-                                        @error('username')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-4">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control @error('email') is-invalid @enderror"
                                                id="email" name="email">
                                         @error('email')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="password" class="form-label">Password</label>
-                                        <input type="password"
-                                               class="form-control @error('password') is-invalid @enderror"
-                                               id="password" name="password">
-                                        @error('password')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -201,6 +171,21 @@
                                         <label for="nohp" class="form-label">No HP</label>
                                         <input type="text" class="form-control" id="nohp" name="nohp"
                                                placeholder="08xxxxxxxxx">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="telegram" class="form-label">Username Telegram</label>
+                                        <input type="text" class="form-control"
+                                               id="telegram" name="telegram" placeholder="Username Telegram">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="instagram" class="form-label">Username Instagram</label>
+                                        <input type="text" class="form-control" id="instagram" name="instagram"
+                                               placeholder="Username Instagram">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="facebook" class="form-label">Username Facebook</label>
+                                        <input type="text" class="form-control"
+                                               id="facebook" name="facebook">
                                     </div>
                                     <div class="mb-3">
                                         <label for="foto" class="form-label">Gambar</label>
@@ -252,7 +237,7 @@
                 },
                 {
                     text: 'Nama',
-                    key: 'user.name',
+                    key: 'nama',
                 },
                 {
                     text: 'Jabatan',
@@ -264,7 +249,7 @@
                 },
                 {
                     text: 'Email',
-                    key: 'user.email',
+                    key: 'profile.email',
                 },
                 {
                     text: 'No HP',
